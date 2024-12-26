@@ -1,6 +1,6 @@
 # How to run
 
-- Create Virtual Environment
+- Create virtual environment
   
     ```sh
     python3 -m venv .venv
@@ -12,16 +12,37 @@
     source .venv/bin/activate
     ```
 
-- Install Requirements
+- Install requirements
 
     ```sh
     pip install -r requirements.txt
     ```
 
-- Run Backend Server
+- Create a file named `run.sh` and add the following content to it:
 
     ```sh
-    python3 manage.py runserver
+    export SECRET_KEY="secure-secret-key"
+    export ENV='dev'
+
+    python3 manage.py runserver $@
     ```
 
-- Note:- Admin username `root` and password `root`
+- Note: If you do not set the ENV variable, the default value is `prod`.
+
+- Make `run.sh` file make a file executable
+
+    ```sh
+    chmod +x ./run.sh
+    ```
+
+- Note: By default, the Django server runs on port 8000. If you want to run it on a different port, pass the port number at the end of the command.
+
+    ```sh
+    chmod +x ./run.sh <port-number>
+    ```
+
+- Run backend server
+
+    ```sh
+    ./run.sh
+    ```
