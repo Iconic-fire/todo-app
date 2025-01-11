@@ -29,6 +29,7 @@ class TodoCreateView(CreateView):
 
     model = Todo
     form_class = TodoCreateForm
+    template_name_suffix= '_create'
     success_url = reverse_lazy("core:todos")
 
 
