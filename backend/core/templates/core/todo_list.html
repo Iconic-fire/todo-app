@@ -1,10 +1,10 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}List{% endblock title %}
 
 {% block content %}
+<a href="{% url 'core:todo_create' %}">Create New Todo</a>
 <h1>Your TODO's</h1>
-<a href="{% url 'core:todos_create' %}">Create New Todo</a>
 <table border="2">
     {% for todo in todo_list %}
         <tr>
@@ -15,6 +15,7 @@
             <th>Created At</th>
             <th>Last Modified At</th>
             <th>View</th>
+            <th>Update</th>
         </tr>
         <tr>
             <td>{{ todo.title }}</td>
@@ -35,7 +36,8 @@
             </td>
             <td>{{ todo.created_at|date:"DATETIME_FORMAT" }}</td>
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
-            <td><a href="{% url 'core:todos_detail' todo.id %}">View Detail</a></td>
+            <td><a href="{% url 'core:todo_detail' todo.id %}">View Detail</a></td>
+            <td><a href="{% url 'core:todo_update' todo.id %}">Update Detail</a></td>
         </tr>
     {% endfor %}
 </table>

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Update{% endblock title %}
+
+{% block content %}
+<a href="{% url 'core:todo_list' %}">See Todo List</a>
+<h1>Update Your TODO</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="reset" value="Clear Changes">
+    <input type="submit" value="Save">
+</form>
+{% endblock content %}
