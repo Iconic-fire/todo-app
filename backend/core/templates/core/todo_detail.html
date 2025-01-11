@@ -3,6 +3,7 @@
 {% block title %}Detail{% endblock title %}
 
 {% block content %}
+<a href="{% url 'core:todo_list' %}">See Todo List</a>
 <h1>Title: {{ todo.title }}</h1>
 <p>Description: {{ todo.description }}</p>
 <p>Status: 

@@ -3,6 +3,7 @@
 {% block title %}Create{% endblock title %}
 
 {% block content %}
+<a href="{% url 'core:todo_list' %}">See Todo List</a>
 <h1>Create Your TODO</h1>
 <form method="post">
     {% csrf_token %}
