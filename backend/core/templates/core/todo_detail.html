@@ -12,7 +12,13 @@
     🕓
     {% endif %}
 </p>
-<p>Due Date: {{ todo.due_date|date:"DATETIME_FORMAT" }}</p>
+<p>Due Date: 
+    {% if todo.due_date %} 
+        {{ todo.due_date|date:"DATETIME_FORMAT" }}
+    {% else %}
+        N/A
+    {% endif %}
+</p>
 <p>Created At: {{ todo.created_at|date:"DATETIME_FORMAT" }}</p>
 <p>Last Modified At: {{ todo.updated_at|date:"DATETIME_FORMAT" }}</p>
 {% endblock content %}
