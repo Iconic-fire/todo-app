@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Your TODO's</h1>
+<a href="{% url 'core:todos_create' %}">Create New Todo</a>
 <table border="2">
     {% for todo in todo_list %}
         <tr>
