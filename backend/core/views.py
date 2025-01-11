@@ -22,7 +22,6 @@ class TodoDetailView(DetailView):
     """Todo Detail View"""
     
     model = Todo
-    fields=('title', 'description', 'due_date')
 
 
 class TodoCreateView(CreateView):
