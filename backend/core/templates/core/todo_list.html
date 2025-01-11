@@ -16,15 +16,16 @@
             <th>Last Modified At</th>
             <th>View</th>
             <th>Update</th>
+            <th>Update Complete Status</th>
         </tr>
         <tr>
             <td>{{ todo.title }}</td>
             <td>{{ todo.description }}</td>
             <td>
                 {% if todo.is_completed %}
-                ✅
+                    ✅
                 {% else %}
-                🕓
+                    🕓
                 {% endif %}
             </td>
             <td>
@@ -38,6 +39,18 @@
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
             <td><a href="{% url 'core:todo_detail' todo.id %}">View Detail</a></td>
             <td><a href="{% url 'core:todo_update' todo.id %}">Update Detail</a></td>
+            <td>
+                <form action="{% url 'core:todo_update_completed' todo.id %}" method="post">
+                    {% csrf_token %}
+                    {% if todo.is_completed %}
+                        <input type="checkbox" name="completed" id="id_completed" hidden>
+                        <button>Mark Complete</button>
+                    {% else %}
+                        <input type="checkbox" name="completed" id="id_completed" checked hidden>
+                        <button>Mark Uncomplete</button>
+                    {% endif %}
+                </form>
+            </td>
         </tr>
     {% endfor %}
 </table>
