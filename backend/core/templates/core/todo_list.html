@@ -35,7 +35,7 @@
             </td>
             <td>{{ todo.created_at|date:"DATETIME_FORMAT" }}</td>
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
-            <td><a href="{% url 'core:todos_detail' todo.id %}">View Detail</a></td>
+            <td><a href="{% url 'core:todo_detail' todo.id %}">View Detail</a></td>
         </tr>
     {% endfor %}
 </table>
