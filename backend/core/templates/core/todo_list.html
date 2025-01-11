@@ -15,6 +15,7 @@
             <th>Created At</th>
             <th>Last Modified At</th>
             <th>View</th>
+            <th>Update</th>
         </tr>
         <tr>
             <td>{{ todo.title }}</td>
@@ -36,6 +37,7 @@
             <td>{{ todo.created_at|date:"DATETIME_FORMAT" }}</td>
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
             <td><a href="{% url 'core:todo_detail' todo.id %}">View Detail</a></td>
+            <td><a href="{% url 'core:todo_update' todo.id %}">Update Detail</a></td>
         </tr>
     {% endfor %}
 </table>
