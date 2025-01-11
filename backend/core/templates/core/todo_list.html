@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Your TODO's</h1>
+<a href="{% url 'core:todos_create' %}">Create New Todo</a>
 <table border="2">
     {% for todo in todo_list %}
         <tr>
@@ -25,7 +26,13 @@
                 🕓
                 {% endif %}
             </td>
-            <td>{{ todo.due_date|date:"DATETIME_FORMAT" }}</td>
+            <td>
+                {% if todo.due_date %} 
+                    {{ todo.due_date|date:"DATETIME_FORMAT" }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
             <td>{{ todo.created_at|date:"DATETIME_FORMAT" }}</td>
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
             <td><a href="{% url 'core:todos_detail' todo.id %}">View Detail</a></td>
