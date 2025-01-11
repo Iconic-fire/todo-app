@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from core import views
+from core.routers import todo_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/", include(todo_router.urls)),
     path("todos/", include("core.urls")),
     path("", views.HomeTemplateView.as_view(), name='home'),
 ]
