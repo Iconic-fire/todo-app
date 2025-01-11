@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<h1>Title: {{ todo.title }}</h1>
+<p>Description: {{ todo.description }}</p>
+<p>Status: 
+    {% if todo.is_completed %}
+    ✅
+    {% else %}
+    🕓
+    {% endif %}
+</p>
+<p>Due Date: {{ todo.due_date|date:"DATETIME_FORMAT" }}</p>
+<p>Created At: {{ todo.created_at|date:"DATETIME_FORMAT" }}</p>
+<p>Last Modified At: {{ todo.updated_at|date:"DATETIME_FORMAT" }}</p>
+{% endblock content %}

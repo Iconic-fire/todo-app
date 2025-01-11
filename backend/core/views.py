@@ -1,4 +1,4 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView
 
 from core.models import Todo
 
@@ -14,3 +14,10 @@ class TodoListView(ListView):
     """Todo List View"""
 
     model = Todo
+
+
+class TodoDetailView(DetailView):
+    """Todo Detail View"""
+    
+    model = Todo
+    fields=('title', 'description', 'due_date')
