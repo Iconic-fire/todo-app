@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, View
+from django.views.generic import ListView, DetailView, DeleteView, TemplateView, CreateView, UpdateView, View
 
 from core.models import Todo
 from core.forms import TodoCreateForm, TodoUpdateCompletedForm, TodoUpdateForm
@@ -26,6 +26,17 @@ class TodoDetailView(DetailView):
     
     model = Todo
 
+
+class TodoDeleteView(DeleteView):
+    """Todo Delete View"""
+    
+    model = Todo
+    success_url = reverse_lazy("core:todo_list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Todo successfully deleted.')
+        return response
 
 class TodoCreateView(CreateView):
     """Todo Create View"""
