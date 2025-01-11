@@ -15,6 +15,7 @@
         <th>Last Modified At</th>
         <th>View</th>
         <th>Update</th>
+        <th>Delete</th>
         <th>Update Complete Status</th>
     </tr>
     {% for todo in todo_list %}
@@ -39,6 +40,7 @@
             <td>{{ todo.updated_at|date:"DATETIME_FORMAT" }}</td>
             <td><a href="{% url 'core:todo_detail' todo.id %}">View Detail</a></td>
             <td><a href="{% url 'core:todo_update' todo.id %}">Update Detail</a></td>
+            <td><a href="{% url 'core:todo_delete' todo.id %}">Delete</a></td>
             <td>
                 <form action="{% url 'core:todo_update_completed' todo.id %}" method="post">
                     {% csrf_token %}
