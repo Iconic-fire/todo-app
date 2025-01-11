@@ -29,3 +29,9 @@ class TodoUpdateForm(TodoForm):
     
     class Meta(TodoForm.Meta):
         fields = ('title', 'description', 'is_completed', 'due_date')
+
+
+class TodoUpdateCompletedForm(forms.Form):
+    """Todo Update Completed From"""
+
+    completed = forms.BooleanField(required=False)
