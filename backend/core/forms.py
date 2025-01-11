@@ -23,3 +23,9 @@ class TodoCreateForm(TodoForm):
     class Meta(TodoForm.Meta):
         fields = ('title', 'description', 'due_date')
 
+
+class TodoUpdateForm(TodoForm):
+    """Todo Update Form"""
+    
+    class Meta(TodoForm.Meta):
+        fields = ('title', 'description', 'is_completed', 'due_date')
