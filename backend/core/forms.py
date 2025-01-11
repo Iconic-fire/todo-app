@@ -2,8 +2,9 @@ from django import forms
 
 from core.models import Todo
 
-class TodoCreateForm(forms.ModelForm):
-    """Todo Create Form"""
+
+class TodoForm(forms.ModelForm):
+    """Base Todo Form with common functionality"""
 
     class Meta:
         model = Todo
@@ -14,3 +15,11 @@ class TodoCreateForm(forms.ModelForm):
                 'type': 'datetime-local',
             }),
         }
+
+
+class TodoCreateForm(TodoForm):
+    """Todo Create Form"""
+    
+    class Meta(TodoForm.Meta):
+        fields = ('title', 'description', 'due_date')
+
