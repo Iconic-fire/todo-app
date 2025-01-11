@@ -1,6 +1,8 @@
-from django.views.generic import ListView, DetailView, TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
 
 from core.models import Todo
+from core.forms import TodoCreateForm
 
 # Create your views here.
 
@@ -21,3 +23,11 @@ class TodoDetailView(DetailView):
     
     model = Todo
     fields=('title', 'description', 'due_date')
+
+
+class TodoCreateView(CreateView):
+    """Todo Create View"""
+
+    model = Todo
+    form_class = TodoCreateForm
+    success_url = reverse_lazy("core:todos")
