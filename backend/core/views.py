@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -33,7 +34,11 @@ class TodoCreateView(CreateView):
     form_class = TodoCreateForm
     template_name_suffix= '_create'
     success_url = reverse_lazy("core:todo_list")
-
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Todo successfully created.')
+        return response
 
 class TodoUpdateView(UpdateView):
     """Todo Update View"""
@@ -42,6 +47,11 @@ class TodoUpdateView(UpdateView):
     form_class = TodoUpdateForm
     template_name_suffix= '_update'
     success_url = reverse_lazy("core:todo_list")
+        
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Todo successfully updated.')
+        return response
 
 
 class TodoUpdateCompletedView(View):
@@ -54,9 +64,13 @@ class TodoUpdateCompletedView(View):
         form = TodoUpdateCompletedForm(request.POST)
 
         if form.is_valid():
-            todo.is_completed = form.cleaned_data['completed']
+            is_completed = form.cleaned_data['completed']
+            todo.is_completed = is_completed
             todo.save()
-
-        # TODO: Add message
+            message_status = 'complete' if is_completed else 'uncomplete'
+            messages.success(request, f"TODO '{todo.title}' marked as {message_status}.")
+        
+        else:
+            messages.warning(request, "Invalid action")
 
         return redirect('core:todo_list')
