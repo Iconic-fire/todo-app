@@ -30,7 +30,7 @@ class TodoCreateView(CreateView):
     model = Todo
     form_class = TodoCreateForm
     template_name_suffix= '_create'
-    success_url = reverse_lazy("core:todos")
+    success_url = reverse_lazy("core:todo_list")
 
 
 class TodoUpdateView(UpdateView):
@@ -39,4 +39,4 @@ class TodoUpdateView(UpdateView):
     model = Todo
     form_class = TodoUpdateForm
     template_name_suffix= '_update'
-    success_url = reverse_lazy("core:todos")
+    success_url = reverse_lazy("core:todo_list")
