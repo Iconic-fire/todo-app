@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_spectacular',
+    'drf_spectacular_sidecar',
     'core',
 ]
 
@@ -136,4 +137,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Productivity tool that allows users to organize, manage, and prioritize tasks',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
 }
