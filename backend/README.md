@@ -21,8 +21,9 @@
 - Create a file named `run.sh` and add the following content to it:
 
     ```sh
+    export ENV="dev"
     export SECRET_KEY="secure-secret-key"
-    export ENV='dev'
+    export CORS_ALLOWED_ORIGINS="http://localhost:3000,http://example.com"
 
     python3 manage.py runserver $@
     ```
