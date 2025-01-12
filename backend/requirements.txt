@@ -6,3 +6,5 @@ djangorestframework==3.15.2
 
 # openapi schema
 drf-spectacular==0.28.0
+# swagger ui and redoc static files
+drf-spectacular-sidecar==2024.12.1
