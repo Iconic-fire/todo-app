@@ -1,3 +1,13 @@
+# Generate OpenAPI client
+
+1. Download OpenAPI schema and locate into project folder
+
+2. Run generate client script
+
+    ```sh
+    npm run gen-client
+    ```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
