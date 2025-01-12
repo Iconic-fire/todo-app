@@ -50,5 +50,5 @@
 # Generating OpenAPI Schema
 
     ```sh
-    python3 manage.py spectacular --color --file schema.yml
+    python3 manage.py spectacular --validate --color --file schema.yml
     ```
