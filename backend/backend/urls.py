@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.schemas import get_schema_view
+
 from core import views
 from core.routers import todo_router
 
@@ -24,4 +26,13 @@ urlpatterns = [
     path("api/", include(todo_router.urls)),
     path("todos/", include("core.urls")),
     path("", views.HomeTemplateView.as_view(), name='home'),
+    path(
+        "openapi/",
+        get_schema_view(
+            title="Todo App", 
+            description="Productivity tool that allows users to organize, manage, and prioritize tasks", 
+            version="1.0.0"
+        ),
+        name="openapi-schema",
+    ),
 ]
