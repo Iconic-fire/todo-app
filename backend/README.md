@@ -50,5 +50,5 @@
 # Generating OpenAPI Schema
 
     ```sh
-    python3 manage.py generateschema --file openapi-schema.yml
+    python3 manage.py spectacular --color --file schema.yml
     ```

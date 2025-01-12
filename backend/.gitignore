@@ -2,4 +2,4 @@
 __pycache__
 *.sh
 *.sqlite3
-openapi-schema.yml
+*schema.yml
