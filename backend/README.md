@@ -46,3 +46,9 @@
     ```sh
     ./run.sh
     ```
+
+# Generating OpenAPI Schema
+
+    ```sh
+    python3 manage.py generateschema --file openapi-schema.yml
+    ```
