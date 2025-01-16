@@ -1,35 +1,41 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { TodosApi, Configuration, Todo } from "./client";
+import todoApi from "./api";
+import { Todo as TodoObj } from "./client";
+import Todo from "./components/Todo";
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<TodoObj[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [failed, setFailed] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const api = new TodosApi(
-          new Configuration({ basePath: "http://127.0.0.1:8000" })
-        );
-        const response = await api.todosList();
-        setTodos(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchData();
+    todoApi
+      .todosList()
+      .then((res) => setTodos(res.data))
+      .catch(() => {
+        setFailed(true);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    console.log(todos);
-  }, [todos]);
+  if (loading === true) {
+    return <h1>Loading ...</h1>;
+  }
+
+  if (failed === true) {
+    // TODO: add retry button
+    return <h1>Unable to fetch</h1>;
+  }
 
   return (
-    <div className="h-svh grid place-items-center bg-stone-800">
-      <h1 className="text-3xl">Todo App</h1>
+    <div className="h-svh p-4 md:p-10 flex flex-col gap-y-10 items-center bg-stone-800">
+      <h1 className="text-white text-3xl underline">Your Todo's</h1>
+      <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
+        {todos.map((todo) => (
+          <Todo key={todo.id} todo={todo} />
+        ))}
+      </ul>
     </div>
   );
 }
