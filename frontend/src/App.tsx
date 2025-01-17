@@ -9,6 +9,12 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [failed, setFailed] = useState<boolean>(false);
 
+  function deleteHandler(id: number) {
+    todoApi.todosDestroy(id).then(() => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    });
+  }
+
   useEffect(() => {
     todoApi
       .todosList()
@@ -33,7 +39,7 @@ function App() {
       <h1 className="text-white text-3xl underline">Your Todo's</h1>
       <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
         {todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} />
+          <Todo key={todo.id} todo={todo} onDelete={deleteHandler} />
         ))}
       </ul>
     </div>
