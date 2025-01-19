@@ -3,15 +3,20 @@ import { Todo as TodoObj } from "../client";
 import DetailModal from "./TodoDetail";
 import Confirmation from "./Confirmation";
 
+interface TodoProps {
+  todo: TodoObj;
+  onDelete: () => void;
+  markAsComplete: () => void;
+}
+
 function Todo({
   todo,
   onDelete,
-}: {
-  todo: TodoObj;
-  onDelete: (id: number) => void;
-}) {
+  markAsComplete
+}: TodoProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showMarkAsDeleteConfirmation, setShowMarkAsDeleteConfirmation] = useState(false);
 
   function openDetail() {
     setShowDetail(true);
@@ -29,6 +34,19 @@ function Todo({
     setShowDeleteConfirmation(false);
   }
 
+  function markAsCompleteClickHandler() {
+    setShowMarkAsDeleteConfirmation(true);
+  }
+
+  function closeMarkAsCompleteConfirmation() {
+    setShowMarkAsDeleteConfirmation(false);
+  }
+
+  function markAsCompleteHandler() {
+    markAsComplete();
+    setShowMarkAsDeleteConfirmation(false);
+  }
+
   return (
     <li>
       <div className="p-2 cursor-pointer flex flex-row gap-2 items-center justify-between rounded-xl border-2 border-green-700 bg-green-500/30 hover:bg-green-700">
@@ -38,6 +56,12 @@ function Todo({
         </div>
         <div className="flex flex-row gap-2 items-center">
           {/* TODO: Create Single component for button */}
+          {/* Mask as complete button */}
+          {!todo.is_completed && <button onClick={markAsCompleteClickHandler}>
+            <svg className="w-6 h-6 text-gray-800 dark:text-white dark:hover:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 1 0-18c1.052 0 2.062.18 3 .512M7 9.577l3.923 3.923 8.5-8.5M17 14v6m-3-3h6"/>
+            </svg>
+          </button>}
           {/* Delete button */}
           {/* TODO: change color and show confirmation before delete */}
           <button
@@ -90,7 +114,8 @@ function Todo({
         </div>
       </div>
       {showDetail && <DetailModal todo={todo} closeHandler={closeDetail} />}
-      <Confirmation isVisible={showDeleteConfirmation} onClose={closeDeleteConfirmation} onConfirm={() => onDelete(todo.id)}/>
+      <Confirmation actionText={"delete"} isVisible={showDeleteConfirmation} onClose={closeDeleteConfirmation} onConfirm={onDelete}/>
+      <Confirmation actionText={"mark as complete"} isVisible={showMarkAsDeleteConfirmation} onClose={closeMarkAsCompleteConfirmation} onConfirm={markAsCompleteHandler}/>
     </li>
   );
 }

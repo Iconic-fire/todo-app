@@ -1,12 +1,14 @@
 import React from "react";
 
 interface ConfirmationProps {
+  actionText: string;
   isVisible: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
 const Confirmation: React.FC<ConfirmationProps> = ({
+  actionText: text,
   isVisible,
   onClose,
   onConfirm,
@@ -65,7 +67,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this todo?
+              Are you sure you want to {text} this todo?
             </h3>
             <button
               type="button"
