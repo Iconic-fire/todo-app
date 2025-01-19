@@ -7,16 +7,19 @@ interface TodoProps {
   todo: TodoObj;
   onDelete: () => void;
   markAsComplete: () => void;
+  markAsIncomplete: () => void;
 }
 
 function Todo({
   todo,
   onDelete,
-  markAsComplete
+  markAsComplete,
+  markAsIncomplete,
 }: TodoProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showMarkAsDeleteConfirmation, setShowMarkAsDeleteConfirmation] = useState(false);
+  const [showMarkAsCompleteConfirmation, setShowMarkAsCompleteConfirmation] = useState(false);
+  const [showMarkAsIncompleteConfirmation, setShowMarkAsIncompleteConfirmation] = useState(false);
 
   function openDetail() {
     setShowDetail(true);
@@ -35,17 +38,31 @@ function Todo({
   }
 
   function markAsCompleteClickHandler() {
-    setShowMarkAsDeleteConfirmation(true);
+    setShowMarkAsCompleteConfirmation(true);
   }
 
   function closeMarkAsCompleteConfirmation() {
-    setShowMarkAsDeleteConfirmation(false);
+    setShowMarkAsCompleteConfirmation(false);
   }
 
   function markAsCompleteHandler() {
     markAsComplete();
-    setShowMarkAsDeleteConfirmation(false);
+    setShowMarkAsCompleteConfirmation(false);
   }
+
+  function markAsIncompleteClickHandler() {
+    setShowMarkAsIncompleteConfirmation(true);
+  }
+
+  function closeMarkAsIncompleteConfirmation() {
+    setShowMarkAsIncompleteConfirmation(false);
+  }
+
+  function markAsIncompleteHandler() {
+    markAsIncomplete();
+    setShowMarkAsIncompleteConfirmation(false);
+  }
+
 
   return (
     <li>
@@ -57,9 +74,15 @@ function Todo({
         <div className="flex flex-row gap-2 items-center">
           {/* TODO: Create Single component for button */}
           {/* Mask as complete button */}
-          {!todo.is_completed && <button onClick={markAsCompleteClickHandler}>
+          {!todo.is_completed ? 
+          <button onClick={markAsCompleteClickHandler}>
             <svg className="w-6 h-6 text-gray-800 dark:text-white dark:hover:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 1 0-18c1.052 0 2.062.18 3 .512M7 9.577l3.923 3.923 8.5-8.5M17 14v6m-3-3h6"/>
+            </svg>
+          </button>
+          : <button onClick={markAsIncompleteClickHandler}>
+            <svg className="w-6 h-6 text-gray-800 dark:text-white dark:hover:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3M3.22302 14C4.13247 18.008 7.71683 21 12 21c4.9706 0 9-4.0294 9-9 0-4.97056-4.0294-9-9-9-3.72916 0-6.92858 2.26806-8.29409 5.5M7 9H3V5"/>
             </svg>
           </button>}
           {/* Delete button */}
@@ -115,7 +138,10 @@ function Todo({
       </div>
       {showDetail && <DetailModal todo={todo} closeHandler={closeDetail} />}
       <Confirmation actionText={"delete"} isVisible={showDeleteConfirmation} onClose={closeDeleteConfirmation} onConfirm={onDelete}/>
-      <Confirmation actionText={"mark as complete"} isVisible={showMarkAsDeleteConfirmation} onClose={closeMarkAsCompleteConfirmation} onConfirm={markAsCompleteHandler}/>
+      {todo.is_completed ? 
+      <Confirmation actionText={"mark as incomplete"} isVisible={showMarkAsIncompleteConfirmation} onClose={closeMarkAsIncompleteConfirmation} onConfirm={markAsIncompleteHandler}/>
+      : <Confirmation actionText={"mark as complete"} isVisible={showMarkAsCompleteConfirmation} onClose={closeMarkAsCompleteConfirmation} onConfirm={markAsCompleteHandler}/>
+      }
     </li>
   );
 }
