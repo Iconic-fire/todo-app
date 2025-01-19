@@ -15,6 +15,19 @@ function App() {
     });
   }
 
+  function markAsComplete(id: number) {
+    todoApi.todosPartialUpdate(id, { is_completed: true }).then(() => {
+      const updatedTodos = todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, is_completed: true };
+        }
+        return todo;
+      });
+      console.log(updatedTodos, updatedTodos);
+      setTodos(updatedTodos);
+    });
+  }
+
   useEffect(() => {
     todoApi
       .todosList()
@@ -35,12 +48,13 @@ function App() {
   }
 
   // TODO: add empty state
+  console.log('render', todos)
   return (
     <div className="h-svh p-4 md:p-10 flex flex-col gap-y-10 items-center bg-stone-800">
       <h1 className="text-white text-3xl underline">Your Todo's</h1>
       <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
         {todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} onDelete={deleteHandler} />
+          <Todo key={todo.id} todo={todo} markAsComplete={() => markAsComplete(todo.id)} onDelete={() => deleteHandler(todo.id)} />
         ))}
       </ul>
     </div>
