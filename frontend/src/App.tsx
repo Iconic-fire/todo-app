@@ -3,7 +3,7 @@ import "./App.css";
 import todoApi from "./api";
 import { Todo as TodoObj } from "./client";
 import Todo from "./components/Todo";
-import CreateTodoForm, { CreateTodoPayload } from "./components/Form";
+import CreateTodoForm, { CreateTodoPayload } from "./components/form/CreateForm";
 
 function App() {
   const [todos, setTodos] = useState<TodoObj[]>([]);
