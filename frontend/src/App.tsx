@@ -15,11 +15,11 @@ function App() {
     });
   }
 
-  function markAsComplete(id: number) {
-    todoApi.todosPartialUpdate(id, { is_completed: true }).then(() => {
+  function updateComplete(id: number, isCompleted: boolean) {
+    todoApi.todosPartialUpdate(id, { is_completed: isCompleted }).then(() => {
       const updatedTodos = todos.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, is_completed: true };
+          return { ...todo, is_completed: isCompleted };
         }
         return todo;
       });
@@ -54,7 +54,7 @@ function App() {
       <h1 className="text-white text-3xl underline">Your Todo's</h1>
       <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
         {todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} markAsComplete={() => markAsComplete(todo.id)} onDelete={() => deleteHandler(todo.id)} />
+          <Todo key={todo.id} todo={todo} markAsComplete={() => updateComplete(todo.id, true)} onDelete={() => deleteHandler(todo.id)} markAsIncomplete={() => updateComplete(todo.id, false)} />
         ))}
       </ul>
     </div>
