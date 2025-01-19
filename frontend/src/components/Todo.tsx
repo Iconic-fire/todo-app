@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Todo as TodoObj } from "../client";
 import DetailModal from "./TodoDetail";
+import Confirmation from "./Confirmation";
 
 function Todo({
   todo,
@@ -10,6 +11,7 @@ function Todo({
   onDelete: (id: number) => void;
 }) {
   const [showDetail, setShowDetail] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   function openDetail() {
     setShowDetail(true);
@@ -17,6 +19,14 @@ function Todo({
 
   function closeDetail() {
     setShowDetail(false);
+  }
+
+  function deleteClickHandler() {
+    setShowDeleteConfirmation(true);
+  }
+
+  function closeDeleteConfirmation() {
+    setShowDeleteConfirmation(false);
   }
 
   return (
@@ -31,7 +41,7 @@ function Todo({
           {/* Delete button */}
           {/* TODO: change color and show confirmation before delete */}
           <button
-            onClick={() => onDelete(todo.id)}
+            onClick={deleteClickHandler}
             className="bg-transparent hover:bg-red-300 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
           >
             <svg
@@ -80,6 +90,7 @@ function Todo({
         </div>
       </div>
       {showDetail && <DetailModal todo={todo} closeHandler={closeDetail} />}
+      <Confirmation isVisible={showDeleteConfirmation} onClose={closeDeleteConfirmation} onConfirm={() => onDelete(todo.id)}/>
     </li>
   );
 }
