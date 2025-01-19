@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import todoApi from "./api";
-import { Todo as TodoObj } from "./client";
+import { PatchedTodo, Todo as TodoObj } from "./client";
 import Todo from "./components/Todo";
-import CreateTodoForm, { CreateTodoPayload } from "./components/form/CreateForm";
+import CreateTodoForm, {
+  CreateTodoPayload,
+} from "./components/form/CreateForm";
 
 function App() {
   const [todos, setTodos] = useState<TodoObj[]>([]);
@@ -14,7 +16,7 @@ function App() {
   function closeCreateForm() {
     setShowCreateForm(false);
   }
-  
+
   function openCreateForm() {
     setShowCreateForm(true);
   }
@@ -25,15 +27,14 @@ function App() {
     });
   }
 
-  function updateComplete(id: number, isCompleted: boolean) {
-    todoApi.todosPartialUpdate(id, { is_completed: isCompleted }).then(() => {
+  function updateTodo(id: number, payload: PatchedTodo) {
+    todoApi.todosPartialUpdate(id, payload).then(() => {
       const updatedTodos = todos.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, is_completed: isCompleted };
+          return { ...todo, ...payload };
         }
         return todo;
       });
-      console.log(updatedTodos, updatedTodos);
       setTodos(updatedTodos);
     });
   }
@@ -71,13 +72,28 @@ function App() {
   return (
     <div className="h-svh p-4 md:p-10 flex flex-col gap-y-10 items-center bg-stone-800">
       <h1 className="text-white text-3xl underline">Your Todo's</h1>
-      <button onClick={openCreateForm} type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Create Todo</button>
+      <button
+        onClick={openCreateForm}
+        type="button"
+        className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+      >
+        Create Todo
+      </button>
       <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
         {todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} markAsComplete={() => updateComplete(todo.id, true)} onDelete={() => deleteHandler(todo.id)} markAsIncomplete={() => updateComplete(todo.id, false)} />
+          <Todo
+            key={todo.id}
+            todo={todo}
+            onDelete={() => deleteHandler(todo.id)}
+            updateTodo={(payload: PatchedTodo) => updateTodo(todo.id, payload)}
+          />
         ))}
       </ul>
-      <CreateTodoForm isVisible={showCreateForm} onClose={closeCreateForm} onSubmit={createTodo} />
+      <CreateTodoForm
+        isVisible={showCreateForm}
+        onClose={closeCreateForm}
+        onSubmit={createTodo}
+      />
     </div>
   );
 }
