@@ -34,6 +34,7 @@ function App() {
     return <h1>Unable to fetch</h1>;
   }
 
+  // TODO: add empty state
   return (
     <div className="h-svh p-4 md:p-10 flex flex-col gap-y-10 items-center bg-stone-800">
       <h1 className="text-white text-3xl underline">Your Todo's</h1>
