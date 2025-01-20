@@ -39,7 +39,7 @@
 - Note: By default, the Django server runs on port 8000. If you want to run it on a different port, pass the port number at the end of the command.
 
     ```sh
-    chmod +x ./run.sh <port-number>
+    ./run.sh <port-number>
     ```
 
 - Run backend server
