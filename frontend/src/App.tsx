@@ -29,12 +29,16 @@ function App() {
 
   function updateTodo(id: number, payload: PatchedTodo) {
     todoApi.todosPartialUpdate(id, payload).then(() => {
-      const updatedTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, ...payload };
-        }
-        return todo;
-      });
+      const updatedTodos = todos
+        .map((todo) => {
+          if (todo.id === id) {
+            return { ...todo, ...payload };
+          }
+          return todo;
+        })
+        // Move the updated todo to the top
+        .sort((a, b) => (a.id === id ? -1 : b.id === id ? 1 : 0));
+
       setTodos(updatedTodos);
     });
   }
