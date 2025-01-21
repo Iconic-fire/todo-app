@@ -52,7 +52,7 @@ function App() {
   useEffect(() => {
     todoApi
       .todosList()
-      .then((res) => setTodos(res.data))
+      .then((res) => setTodos(res.data.results))
       .catch(() => {
         setFailed(true);
       })
