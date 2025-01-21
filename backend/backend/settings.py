@@ -137,9 +137,12 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES,
 }
 
+# SPECTACULAR 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Todo API',
     'DESCRIPTION': 'Productivity tool that allows users to organize, manage, and prioritize tasks',
@@ -150,4 +153,8 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
 }
 
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+# CORS
+CORS_ALLOWED_ORIGINS_BY_ENV = os.getenv('CORS_ALLOWED_ORIGINS', '')
+
+# Split the string into a list of origins, defaulting to an empty list if the string is empty
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_BY_ENV.split(',') if origin.strip()]
