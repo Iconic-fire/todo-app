@@ -130,11 +130,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REST FRAMEWORK
-DEFAULT_RENDERER_CLASSES=[]
-if DEBUG:
+DEFAULT_RENDERER_CLASSES=['rest_framework.renderers.JSONRenderer']
+
+if not DEBUG:
     DEFAULT_RENDERER_CLASSES.append('rest_framework.renderers.BrowsableAPIRenderer')
-else:
-    DEFAULT_RENDERER_CLASSES.append('rest_framework.renderers.JSONRenderer')
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
