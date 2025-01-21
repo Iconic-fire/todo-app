@@ -29,12 +29,16 @@ function App() {
 
   function updateTodo(id: number, payload: PatchedTodo) {
     todoApi.todosPartialUpdate(id, payload).then(() => {
-      const updatedTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, ...payload };
-        }
-        return todo;
-      });
+      const updatedTodos = todos
+        .map((todo) => {
+          if (todo.id === id) {
+            return { ...todo, ...payload };
+          }
+          return todo;
+        })
+        // Move the updated todo to the top
+        .sort((a, b) => (a.id === id ? -1 : b.id === id ? 1 : 0));
+
       setTodos(updatedTodos);
     });
   }
@@ -44,8 +48,8 @@ function App() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     todoApi.todosCreate(payload).then((res) => {
-      // TODO: move newly created todo to the top on api order by descending by id
-      setTodos([...todos, res.data]);
+      // move newly created todo to the top
+      setTodos([res.data, ...todos]);
     });
   }
 
