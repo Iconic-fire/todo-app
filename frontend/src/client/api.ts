@@ -24,6 +24,37 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
+ * 
+ * @export
+ * @interface PaginatedTodoList
+ */
+export interface PaginatedTodoList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedTodoList
+     */
+    'count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedTodoList
+     */
+    'next'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedTodoList
+     */
+    'previous'?: string | null;
+    /**
+     * 
+     * @type {Array<Todo>}
+     * @memberof PaginatedTodoList
+     */
+    'results': Array<Todo>;
+}
+/**
  * Todo Serializer
  * @export
  * @interface PatchedTodo
@@ -210,10 +241,12 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * Todo View Set
+         * @param {number} [limit] Number of results to return per page.
+         * @param {number} [offset] The initial index from which to return the results.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        todosList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        todosList: async (limit?: number, offset?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/todos/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -231,6 +264,14 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             setBasicAuthToObject(localVarRequestOptions, configuration)
 
             // authentication cookieAuth required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
 
     
@@ -406,11 +447,13 @@ export const TodosApiFp = function(configuration?: Configuration) {
         },
         /**
          * Todo View Set
+         * @param {number} [limit] Number of results to return per page.
+         * @param {number} [offset] The initial index from which to return the results.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async todosList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Todo>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.todosList(options);
+        async todosList(limit?: number, offset?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedTodoList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.todosList(limit, offset, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TodosApi.todosList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -483,11 +526,13 @@ export const TodosApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * Todo View Set
+         * @param {number} [limit] Number of results to return per page.
+         * @param {number} [offset] The initial index from which to return the results.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        todosList(options?: RawAxiosRequestConfig): AxiosPromise<Array<Todo>> {
-            return localVarFp.todosList(options).then((request) => request(axios, basePath));
+        todosList(limit?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<PaginatedTodoList> {
+            return localVarFp.todosList(limit, offset, options).then((request) => request(axios, basePath));
         },
         /**
          * Todo View Set
@@ -552,12 +597,14 @@ export class TodosApi extends BaseAPI {
 
     /**
      * Todo View Set
+     * @param {number} [limit] Number of results to return per page.
+     * @param {number} [offset] The initial index from which to return the results.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TodosApi
      */
-    public todosList(options?: RawAxiosRequestConfig) {
-        return TodosApiFp(this.configuration).todosList(options).then((request) => request(this.axios, this.basePath));
+    public todosList(limit?: number, offset?: number, options?: RawAxiosRequestConfig) {
+        return TodosApiFp(this.configuration).todosList(limit, offset, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
