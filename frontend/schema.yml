@@ -9,6 +9,19 @@ paths:
     get:
       operationId: todos_list
       description: Todo View Set
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
       tags:
       - todos
       security:
@@ -20,9 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Todo'
+                $ref: '#/components/schemas/PaginatedTodoList'
           description: ''
     post:
       operationId: todos_create
@@ -166,6 +177,29 @@ paths:
           description: No response body
 components:
   schemas:
+    PaginatedTodoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Todo'
     PatchedTodo:
       type: object
       description: Todo Serializer
