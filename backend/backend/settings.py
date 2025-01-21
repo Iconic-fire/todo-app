@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST FRAMEWORK
 DEFAULT_RENDERER_CLASSES=['rest_framework.renderers.JSONRenderer']
 
-if not DEBUG:
+if DEBUG:
     DEFAULT_RENDERER_CLASSES.append('rest_framework.renderers.BrowsableAPIRenderer')
 
 REST_FRAMEWORK = {
