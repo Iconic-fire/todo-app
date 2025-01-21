@@ -44,8 +44,8 @@ function App() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     todoApi.todosCreate(payload).then((res) => {
-      // TODO: move newly created todo to the top on api order by descending by id
-      setTodos([...todos, res.data]);
+      // move newly created todo to the top
+      setTodos([res.data, ...todos]);
     });
   }
 
