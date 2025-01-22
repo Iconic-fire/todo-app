@@ -6,6 +6,8 @@ This is a simple **React-based Todo Web Application**.
 
 - **React Web App**: [Visit the app](https://iconic-fire.github.io/todo-app/)
 
+- **Django DTL Website**: [Visit the website](https://todoappiconicfire.pythonanywhere.com/todos/)
+
 ## Backend API
 
 - **API Endpoint**: [Todo API](https://todoappiconicfire.pythonanywhere.com/api/todos/)
