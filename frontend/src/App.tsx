@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import todoApi from "./api";
 import { PatchedTodo, Todo as TodoObj } from "./client";
-import Todo from "./components/Todo";
 import CreateTodoForm, {
   CreateTodoPayload,
 } from "./components/form/CreateForm";
+import TodoList from "./components/TodoList";
 
 function App() {
   const [todos, setTodos] = useState<TodoObj[]>([]);
@@ -27,7 +27,7 @@ function App() {
     });
   }
 
-  function updateTodo(id: number, payload: PatchedTodo) {
+  function updateTodoHandler(id: number, payload: PatchedTodo) {
     todoApi.todosPartialUpdate(id, payload).then(() => {
       const updatedTodos = todos
         .map((todo) => {
@@ -83,16 +83,11 @@ function App() {
       >
         Create Todo
       </button>
-      <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
-        {todos.map((todo) => (
-          <Todo
-            key={todo.id}
-            todo={todo}
-            onDelete={() => deleteHandler(todo.id)}
-            updateTodo={(payload: PatchedTodo) => updateTodo(todo.id, payload)}
-          />
-        ))}
-      </ul>
+      <TodoList
+        todos={todos}
+        deleteHandler={deleteHandler}
+        updateTodoHandler={updateTodoHandler}
+      />
       <CreateTodoForm
         isVisible={showCreateForm}
         onClose={closeCreateForm}
