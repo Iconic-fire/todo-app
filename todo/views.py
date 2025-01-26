@@ -1,17 +1,24 @@
+from django.shortcuts import render
 from .models import Todo
-from .serializers import TodoSerializer
-from rest_framework import mixins
-from rest_framework import generics
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
-class SnippetList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.DestroyModelMixin,
-                  generics.GenericAPIView):
-    queryset = Todo.objects.all()
-    serializer_class = TodoSerializer
+def todo_list(request):
+    todos = Todo.objects.all()
+    serialized_todos = json.loads(
+        json.dumps(list(todos.values()), cls=DjangoJSONEncoder)
+    )
+    template_dir = "todo/"
+    template_name = "index.html"
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    return render(
+        request=request,
+        template_name=template_dir + template_name,
+        context={
+            "title": "Todo List",
+            "todos_context": {
+                "todos": serialized_todos,
+                "total": len(serialized_todos),
+            },
+        },
+    )
