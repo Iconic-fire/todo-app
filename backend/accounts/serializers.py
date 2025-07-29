@@ -7,3 +7,6 @@ User = get_user_model()
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
