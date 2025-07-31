@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PatchedTodo, Todo as TodoObj } from "../client";
+import { PatchedTodo, Todo as TodoObj } from "../api/client";
 import DetailModal from "./TodoDetail";
 import Confirmation from "./Confirmation";
 import UpdateTodoForm from "./form/UpdateForm";
