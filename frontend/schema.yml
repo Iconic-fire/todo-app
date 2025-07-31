@@ -5,6 +5,59 @@ info:
   description: Productivity tool that allows users to organize, manage, and prioritize
     tasks
 paths:
+  /api/accounts/login/:
+    post:
+      operationId: accounts_login_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginSerializerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginSerializerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginSerializerRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginSerializerResponse'
+          description: ''
+  /api/accounts/logout/:
+    post:
+      operationId: accounts_logout_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Logout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logout'
+          description: ''
   /api/todos/:
     get:
       operationId: todos_list
@@ -25,9 +78,7 @@ paths:
       tags:
       - todos
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -53,9 +104,7 @@ paths:
               $ref: '#/components/schemas/Todo'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -77,9 +126,7 @@ paths:
       tags:
       - todos
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -112,9 +159,7 @@ paths:
               $ref: '#/components/schemas/Todo'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -146,9 +191,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedTodo'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -169,14 +212,40 @@ paths:
       tags:
       - todos
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
 components:
   schemas:
+    LoginSerializerRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    LoginSerializerResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        tokens:
+          $ref: '#/components/schemas/Tokens'
+      required:
+      - message
+      - tokens
+    Logout:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
     PaginatedTodoList:
       type: object
       required:
@@ -259,11 +328,18 @@ components:
       - id
       - title
       - updated_at
+    Tokens:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
   securitySchemes:
-    basicAuth:
+    jwtAuth:
       type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
+      scheme: bearer
+      bearerFormat: JWT
