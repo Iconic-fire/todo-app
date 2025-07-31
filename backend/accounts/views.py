@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework.response import Response
-from accounts.serializers import LoginSerializer, LogoutSerializer
+from drf_spectacular.utils import extend_schema
+from accounts.serializers import LoginSerializerRequest, LoginSerializerResponse, LogoutSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 
@@ -17,9 +18,14 @@ def get_tokens_for_user(user):
 
 
 class LoginView(GenericAPIView):
-    serializer_class = LoginSerializer
+    serializer_class = LoginSerializerRequest
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: LoginSerializerResponse
+        }
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
