@@ -5,7 +5,7 @@
 2. Run generate client script
 
     ```sh
-    npm run gen-client
+    npm run gen-fix-client
     ```
 
 # React + TypeScript + Vite
