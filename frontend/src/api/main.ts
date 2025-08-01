@@ -1,7 +1,7 @@
+import {API_BASE_URL, axiosInstance} from "./axios";
 import { Configuration, AccountsApi, TodosApi } from "./client";
 
-// TODO: base url must be come from enticement variable
-const config = new Configuration({ basePath: "http://127.0.0.1:8000" })
+const config = new Configuration({ basePath: API_BASE_URL });
 
-export const accountsApi = new AccountsApi(config)
-export const todoApi = new TodosApi(config);
+export const accountsApi = new AccountsApi(config);
+export const todoApi = new TodosApi(config,  undefined, axiosInstance);
