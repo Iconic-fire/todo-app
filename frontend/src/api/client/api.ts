@@ -206,6 +206,25 @@ export interface Todo {
 /**
  * 
  * @export
+ * @interface TokenRefresh
+ */
+export interface TokenRefresh {
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenRefresh
+     */
+    'access': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenRefresh
+     */
+    'refresh': string;
+}
+/**
+ * 
+ * @export
  * @interface Tokens
  */
 export interface Tokens {
@@ -307,6 +326,41 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsRefreshCreate: async (tokenRefresh: TokenRefresh, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tokenRefresh' is not null or undefined
+            assertParamExists('accountsRefreshCreate', 'tokenRefresh', tokenRefresh)
+            const localVarPath = `/api/accounts/refresh/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(tokenRefresh, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -341,6 +395,18 @@ export const AccountsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsLogoutCreate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TokenRefresh>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsRefreshCreate(tokenRefresh, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsRefreshCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -368,6 +434,15 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
          */
         accountsLogoutCreate(logout: Logout, options?: RawAxiosRequestConfig): AxiosPromise<Logout> {
             return localVarFp.accountsLogoutCreate(logout, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig): AxiosPromise<TokenRefresh> {
+            return localVarFp.accountsRefreshCreate(tokenRefresh, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -399,6 +474,17 @@ export class AccountsApi extends BaseAPI {
      */
     public accountsLogoutCreate(logout: Logout, options?: RawAxiosRequestConfig) {
         return AccountsApiFp(this.configuration).accountsLogoutCreate(logout, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+     * @param {TokenRefresh} tokenRefresh 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsRefreshCreate(tokenRefresh, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
