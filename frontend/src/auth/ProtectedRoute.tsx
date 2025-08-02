@@ -1,14 +1,18 @@
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { getRefreshToken, isTokenExpired } from "./utils";
+import Header from "../components/Header";
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute( ) {
   const token = getRefreshToken();
 
   if (!token || isTokenExpired(token)) {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return <>
+    <Header />
+    <Outlet />
+  </>;
 };
 
 export default ProtectedRoute;
