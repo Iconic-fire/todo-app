@@ -1,4 +1,4 @@
-import { Todo } from "../client";
+import { Todo } from "../api/client";
 import DateInfo from "./Date";
 
 function DetailModal({

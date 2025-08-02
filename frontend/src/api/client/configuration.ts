@@ -89,7 +89,12 @@ export class Configuration {
         this.accessToken = param.accessToken;
         this.basePath = param.basePath;
         this.serverIndex = param.serverIndex;
-        this.baseOptions = param.baseOptions;
+        this.baseOptions = {
+            headers: {
+                ...param.baseOptions?.headers,
+            },
+            ...param.baseOptions
+        };
         this.formDataCtor = param.formDataCtor;
     }
 

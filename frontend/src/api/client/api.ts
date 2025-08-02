@@ -26,6 +26,57 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface LoginSerializerRequest
+ */
+export interface LoginSerializerRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginSerializerRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginSerializerRequest
+     */
+    'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface LoginSerializerResponse
+ */
+export interface LoginSerializerResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginSerializerResponse
+     */
+    'message': string;
+    /**
+     * 
+     * @type {Tokens}
+     * @memberof LoginSerializerResponse
+     */
+    'tokens': Tokens;
+}
+/**
+ * 
+ * @export
+ * @interface Logout
+ */
+export interface Logout {
+    /**
+     * 
+     * @type {string}
+     * @memberof Logout
+     */
+    'refresh': string;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedTodoList
  */
 export interface PaginatedTodoList {
@@ -152,6 +203,292 @@ export interface Todo {
      */
     'updated_at': string;
 }
+/**
+ * 
+ * @export
+ * @interface TokenRefresh
+ */
+export interface TokenRefresh {
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenRefresh
+     */
+    'access': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenRefresh
+     */
+    'refresh': string;
+}
+/**
+ * 
+ * @export
+ * @interface Tokens
+ */
+export interface Tokens {
+    /**
+     * 
+     * @type {string}
+     * @memberof Tokens
+     */
+    'access': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Tokens
+     */
+    'refresh': string;
+}
+
+/**
+ * AccountsApi - axios parameter creator
+ * @export
+ */
+export const AccountsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsLoginCreate: async (loginSerializerRequest: LoginSerializerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginSerializerRequest' is not null or undefined
+            assertParamExists('accountsLoginCreate', 'loginSerializerRequest', loginSerializerRequest)
+            const localVarPath = `/api/accounts/login/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(loginSerializerRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Logout} logout 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsLogoutCreate: async (logout: Logout, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'logout' is not null or undefined
+            assertParamExists('accountsLogoutCreate', 'logout', logout)
+            const localVarPath = `/api/accounts/logout/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(logout, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsRefreshCreate: async (tokenRefresh: TokenRefresh, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tokenRefresh' is not null or undefined
+            assertParamExists('accountsRefreshCreate', 'tokenRefresh', tokenRefresh)
+            const localVarPath = `/api/accounts/refresh/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(tokenRefresh, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AccountsApi - functional programming interface
+ * @export
+ */
+export const AccountsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AccountsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginSerializerResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsLoginCreate(loginSerializerRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsLoginCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {Logout} logout 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsLogoutCreate(logout: Logout, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Logout>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsLogoutCreate(logout, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsLogoutCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TokenRefresh>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsRefreshCreate(tokenRefresh, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsRefreshCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AccountsApi - factory interface
+ * @export
+ */
+export const AccountsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AccountsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig): AxiosPromise<LoginSerializerResponse> {
+            return localVarFp.accountsLoginCreate(loginSerializerRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {Logout} logout 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsLogoutCreate(logout: Logout, options?: RawAxiosRequestConfig): AxiosPromise<Logout> {
+            return localVarFp.accountsLogoutCreate(logout, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+         * @param {TokenRefresh} tokenRefresh 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig): AxiosPromise<TokenRefresh> {
+            return localVarFp.accountsRefreshCreate(tokenRefresh, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AccountsApi - object-oriented interface
+ * @export
+ * @class AccountsApi
+ * @extends {BaseAPI}
+ */
+export class AccountsApi extends BaseAPI {
+    /**
+     * 
+     * @param {LoginSerializerRequest} loginSerializerRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsLoginCreate(loginSerializerRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {Logout} logout 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsLogoutCreate(logout: Logout, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsLogoutCreate(logout, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
+     * @param {TokenRefresh} tokenRefresh 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsRefreshCreate(tokenRefresh, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * TodosApi - axios parameter creator
@@ -180,11 +517,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -222,11 +557,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -259,11 +592,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
@@ -307,11 +638,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -349,11 +678,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -391,11 +718,9 @@ export const TodosApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication basicAuth required
-            // http basic authentication required
-            setBasicAuthToObject(localVarRequestOptions, configuration)
-
-            // authentication cookieAuth required
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     

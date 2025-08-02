@@ -11,3 +11,6 @@ drf-spectacular-sidecar==2024.12.1
 
 # cors
 django-cors-headers==4.6.0
+
+# authentication
+djangorestframework_simplejwt==5.5.1
