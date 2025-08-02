@@ -17,11 +17,9 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Home />
-        </ProtectedRoute>
-      } />
+      <Route path="/" element={<ProtectedRoute />}>  
+        <Route index element={<Home />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
