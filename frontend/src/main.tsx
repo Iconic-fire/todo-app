@@ -6,7 +6,8 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* NOTE: for github pages deployment */}
+    <BrowserRouter basename="/todo-app">
       <App />
     </BrowserRouter>
   </StrictMode>,
