@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "gen-client": "openapi-generator-cli generate -i schema.yml -g typescript-axios -o ./src/client",
+    "fix-user-agent": "sed -i '/User-Agent/d' ./src/api/client/configuration.ts",
+    "gen-client": "openapi-generator-cli generate -i schema.yml -g typescript-axios -o ./src/api/client",
+    "gen-fix-client": "npm run gen-client && npm run fix-user-agent",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

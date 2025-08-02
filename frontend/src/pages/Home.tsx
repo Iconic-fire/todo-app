@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import todoApi from "../api";
-import { PatchedTodo, Todo as TodoObj } from "../client";
+import { todoApi } from "../api/main";
+import { PatchedTodo, Todo as TodoObj } from "../api/client";
 import CreateTodoForm, {
   CreateTodoPayload,
 } from "../components/form/CreateForm";
