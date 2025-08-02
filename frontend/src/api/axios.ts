@@ -3,7 +3,7 @@ import { getAccessToken, getRefreshToken, isTokenExpired, removeTokens, setAcces
 import { redirectToLogin } from "../auth/redirects";
 
 const TOKEN_PREFIX = "Bearer";
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://todoappiconicfire.pythonanywhere.com";
 
 type FailedRequest = {
     resolve: (token: string) => void;
@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
 
             try {
                 const refreshToken = getRefreshToken();
-                
+
                 // if refresh token is not present redirect to login
                 if (!refreshToken) {
                     removeTokens();
