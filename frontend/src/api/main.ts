@@ -4,4 +4,5 @@ import { Configuration, AccountsApi, TodosApi } from "./client";
 const config = new Configuration({ basePath: API_BASE_URL });
 
 export const accountsApi = new AccountsApi(config);
+export const accountsApiAuthenticated = new AccountsApi(config, undefined, axiosInstance);
 export const todoApi = new TodosApi(config,  undefined, axiosInstance);
