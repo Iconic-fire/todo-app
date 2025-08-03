@@ -85,6 +85,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenRefresh'
           description: ''
+  /api/accounts/signup/:
+    post:
+      operationId: accounts_signup_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpSerializerResponse'
+          description: ''
+        '400':
+          description: No response body
+  /api/accounts/verify-email/:
+    get:
+      operationId: accounts_verify_email_retrieve
+      parameters:
+      - in: query
+        name: token
+        schema:
+          type: string
+        description: Token for email verification
+        required: true
+      - in: query
+        name: uid
+        schema:
+          type: string
+        description: User ID encoded in base64
+        required: true
+      tags:
+      - accounts
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyEmailResponse'
+          description: ''
+        '400':
+          description: No response body
   /api/todos/:
     get:
       operationId: todos_list
@@ -323,6 +382,34 @@ components:
           type: string
           format: date-time
           readOnly: true
+    SignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+      - password2
+    SignUpSerializerResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+      - email
+      - message
     Todo:
       type: object
       description: Todo Serializer
@@ -377,6 +464,13 @@ components:
       required:
       - access
       - refresh
+    VerifyEmailResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
   securitySchemes:
     jwtAuth:
       type: http
