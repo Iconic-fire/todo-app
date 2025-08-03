@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
 from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from accounts.serializers import LoginSerializerRequest, LoginSerializerResponse, LogoutSerializer, SignupRequestSerializer, SignUpSerializerResponse, VerifyEmailResponseSerializer
@@ -95,3 +95,47 @@ class SignupView(GenericAPIView):
             SignUpSerializerResponse({"message": "User created successfully.", "email": user.email}).data,
             status=status.HTTP_201_CREATED
         )
+
+class VerifyEmailView(GenericAPIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="uid",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="User ID encoded in base64"
+            ),
+            OpenApiParameter(
+                name="token",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="Token for email verification"
+            )
+        ],
+        responses={
+            status.HTTP_200_OK: VerifyEmailResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: {}
+        }
+    )
+    def get(self, request): 
+        uid = request.query_params.get('uid')
+        token = request.query_params.get('token')
+
+        try:
+            uid = urlsafe_base64_decode(uid).decode()
+            user = User.objects.get(pk=uid)
+        except Exception:
+            # print("Invalid UID")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response(
+                VerifyEmailResponseSerializer({"message": "Email confirmed successfully."}).data,
+                status=status.HTTP_200_OK
+            )
+        # print("Invalid or expired token.")
+        return Response(status=status.HTTP_400_BAD_REQUEST)
