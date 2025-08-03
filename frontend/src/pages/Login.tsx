@@ -39,7 +39,7 @@ function Login() {
   };
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800 dark:text-gray-100">
           Sign in to your account
@@ -86,6 +86,13 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="mt-4 text-sm flex justify-center gap-1">
+          <p className="text-gray-600 dark:text-gray-400">Don't have an account?</p>
+          <a className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" onClick={() => navigate("/signup")}>
+            Sign up
+          </a>
+        </div>
       </div>
     </div>
   );
