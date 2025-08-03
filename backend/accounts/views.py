@@ -1,11 +1,16 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
-from accounts.serializers import LoginSerializerRequest, LoginSerializerResponse, LogoutSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
+from accounts.serializers import LoginSerializerRequest, LoginSerializerResponse, LogoutSerializer, SignupRequestSerializer, SignUpSerializerResponse, VerifyEmailResponseSerializer
 
 User = get_user_model()
 
@@ -56,3 +61,37 @@ class LogoutView(GenericAPIView):
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class SignupView(GenericAPIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        request=SignupRequestSerializer,
+        responses={
+            status.HTTP_201_CREATED: SignUpSerializerResponse,
+            status.HTTP_400_BAD_REQUEST: {}
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = SignupRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save(is_active=False)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        frontend_url=getattr(settings, 'FRONTEND_URL')
+        assert frontend_url, "FRONTEND_URL must be set in settings.py"
+        confirm_url = f"{frontend_url}/verify-email/?uid={uid}&token={token}"
+        
+        print(f"Confirm your email by clicking here: {confirm_url}")
+
+        # TODO: configure email settings and send confirmation email
+        # send_mail(
+        #     "Confirm your email",
+        #     f"Click here to confirm: {confirm_url}",
+        #     'noreply@example.com',
+        #     [user.email],
+        # )
+        return Response(
+            SignUpSerializerResponse({"message": "User created successfully.", "email": user.email}).data,
+            status=status.HTTP_201_CREATED
+        )
