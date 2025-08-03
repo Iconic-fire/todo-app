@@ -43,3 +43,22 @@ class SignUpSerializerResponse(serializers.Serializer):
 
 class VerifyEmailResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
+
+class ChangePasswordRequestSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, validators=[validate_password])
+    new_password2 = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['new_password2']:
+            raise serializers.ValidationError({"new_password": "New passwords do not match"})
+        return data
+    
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Wrong old password")
+        return value
+
+class ChangePasswordResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
