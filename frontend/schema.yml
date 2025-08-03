@@ -5,6 +5,32 @@ info:
   description: Productivity tool that allows users to organize, manage, and prioritize
     tasks
 paths:
+  /api/accounts/change-password/:
+    post:
+      operationId: accounts_change_password_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordResponse'
+          description: ''
   /api/accounts/login/:
     post:
       operationId: accounts_login_create
@@ -94,13 +120,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignupRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignupRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: '#/components/schemas/SignupRequest'
         required: true
       security:
       - jwtAuth: []
@@ -304,6 +330,29 @@ paths:
           description: No response body
 components:
   schemas:
+    ChangePasswordRequest:
+      type: object
+      properties:
+        old_password:
+          type: string
+          writeOnly: true
+        new_password:
+          type: string
+          writeOnly: true
+        new_password2:
+          type: string
+          writeOnly: true
+      required:
+      - new_password
+      - new_password2
+      - old_password
+    ChangePasswordResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
     LoginSerializerRequest:
       type: object
       properties:
@@ -382,7 +431,18 @@ components:
           type: string
           format: date-time
           readOnly: true
-    SignUp:
+    SignUpSerializerResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+      - email
+      - message
+    SignupRequest:
       type: object
       properties:
         email:
@@ -399,17 +459,6 @@ components:
       - email
       - password
       - password2
-    SignUpSerializerResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        email:
-          type: string
-          format: email
-      required:
-      - email
-      - message
     Todo:
       type: object
       description: Todo Serializer
