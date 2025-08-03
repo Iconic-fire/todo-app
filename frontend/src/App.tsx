@@ -3,11 +3,12 @@ import { Routes, Route, useNavigate } from "react-router";
 import "./App.css";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Signup from "./pages/Signup";
+import VerifyEmail from "./pages/VerifyEmail";
+import ChangePasswordPage from "./pages/ChangePassword";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { setNavigate } from "./auth/redirects";
-import Signup from "./pages/Signup";
-import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function App() {
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/" element={<ProtectedRoute />}>  
         <Route index element={<Home />} />
+        <Route path="/change-password" element={<ChangePasswordPage />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
