@@ -10,7 +10,16 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from accounts.serializers import LoginSerializerRequest, LoginSerializerResponse, LogoutSerializer, SignupRequestSerializer, SignUpSerializerResponse, VerifyEmailResponseSerializer
+from accounts.serializers import (
+    ChangePasswordRequestSerializer,
+    ChangePasswordResponseSerializer,
+    LoginSerializerRequest, 
+    LoginSerializerResponse, 
+    LogoutSerializer,
+    SignupRequestSerializer,
+    SignUpSerializerResponse, 
+    VerifyEmailResponseSerializer,
+)
 
 User = get_user_model()
 
@@ -139,3 +148,24 @@ class VerifyEmailView(GenericAPIView):
             )
         # print("Invalid or expired token.")
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(GenericAPIView):
+    serializer_class = ChangePasswordRequestSerializer
+
+    @extend_schema(
+        request=ChangePasswordRequestSerializer,
+        responses={
+            status.HTTP_200_OK: ChangePasswordResponseSerializer,
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        new_password = serializer.validated_data['new_password']
+        user.set_password(new_password)
+        user.save()
+        return Response(
+            ChangePasswordResponseSerializer({"message": "Password changed successfully."}).data,
+            status=status.HTTP_200_OK
+        )
