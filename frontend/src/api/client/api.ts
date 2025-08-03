@@ -26,6 +26,44 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface ChangePasswordRequest
+ */
+export interface ChangePasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'old_password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'new_password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'new_password2': string;
+}
+/**
+ * 
+ * @export
+ * @interface ChangePasswordResponse
+ */
+export interface ChangePasswordResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordResponse
+     */
+    'message': string;
+}
+/**
+ * 
+ * @export
  * @interface LoginSerializerRequest
  */
 export interface LoginSerializerRequest {
@@ -157,31 +195,6 @@ export interface PatchedTodo {
 /**
  * 
  * @export
- * @interface SignUp
- */
-export interface SignUp {
-    /**
-     * 
-     * @type {string}
-     * @memberof SignUp
-     */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SignUp
-     */
-    'password': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SignUp
-     */
-    'password2': string;
-}
-/**
- * 
- * @export
  * @interface SignUpSerializerResponse
  */
 export interface SignUpSerializerResponse {
@@ -197,6 +210,31 @@ export interface SignUpSerializerResponse {
      * @memberof SignUpSerializerResponse
      */
     'email': string;
+}
+/**
+ * 
+ * @export
+ * @interface SignupRequest
+ */
+export interface SignupRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SignupRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SignupRequest
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SignupRequest
+     */
+    'password2': string;
 }
 /**
  * Todo Serializer
@@ -288,13 +326,13 @@ export interface Tokens {
 /**
  * 
  * @export
- * @interface VerifyEmailResponse
+ * @interface VerifyEmailResponseResponse
  */
-export interface VerifyEmailResponse {
+export interface VerifyEmailResponseResponse {
     /**
      * 
      * @type {string}
-     * @memberof VerifyEmailResponse
+     * @memberof VerifyEmailResponseResponse
      */
     'message': string;
 }
@@ -305,6 +343,45 @@ export interface VerifyEmailResponse {
  */
 export const AccountsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsChangePasswordCreate: async (changePasswordRequest: ChangePasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'changePasswordRequest' is not null or undefined
+            assertParamExists('accountsChangePasswordCreate', 'changePasswordRequest', changePasswordRequest)
+            const localVarPath = `/api/accounts/change-password/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(changePasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {LoginSerializerRequest} loginSerializerRequest 
@@ -420,13 +497,13 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @param {SignUp} signUp 
+         * @param {SignupRequest} signupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsSignupCreate: async (signUp: SignUp, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'signUp' is not null or undefined
-            assertParamExists('accountsSignupCreate', 'signUp', signUp)
+        accountsSignupCreate: async (signupRequest: SignupRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'signupRequest' is not null or undefined
+            assertParamExists('accountsSignupCreate', 'signupRequest', signupRequest)
             const localVarPath = `/api/accounts/signup/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -450,7 +527,7 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(signUp, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(signupRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -516,6 +593,18 @@ export const AccountsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsChangePasswordCreate(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChangePasswordResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsChangePasswordCreate(changePasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsChangePasswordCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {LoginSerializerRequest} loginSerializerRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -552,12 +641,12 @@ export const AccountsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {SignUp} signUp 
+         * @param {SignupRequest} signupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async accountsSignupCreate(signUp: SignUp, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignUpSerializerResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsSignupCreate(signUp, options);
+        async accountsSignupCreate(signupRequest: SignupRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignUpSerializerResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsSignupCreate(signupRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsSignupCreate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -569,7 +658,7 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VerifyEmailResponse>> {
+        async accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VerifyEmailResponseResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.accountsVerifyEmailRetrieve(token, uid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsVerifyEmailRetrieve']?.[localVarOperationServerIndex]?.url;
@@ -585,6 +674,15 @@ export const AccountsApiFp = function(configuration?: Configuration) {
 export const AccountsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AccountsApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {ChangePasswordRequest} changePasswordRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsChangePasswordCreate(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<ChangePasswordResponse> {
+            return localVarFp.accountsChangePasswordCreate(changePasswordRequest, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {LoginSerializerRequest} loginSerializerRequest 
@@ -614,12 +712,12 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @param {SignUp} signUp 
+         * @param {SignupRequest} signupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsSignupCreate(signUp: SignUp, options?: RawAxiosRequestConfig): AxiosPromise<SignUpSerializerResponse> {
-            return localVarFp.accountsSignupCreate(signUp, options).then((request) => request(axios, basePath));
+        accountsSignupCreate(signupRequest: SignupRequest, options?: RawAxiosRequestConfig): AxiosPromise<SignUpSerializerResponse> {
+            return localVarFp.accountsSignupCreate(signupRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -628,7 +726,7 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): AxiosPromise<VerifyEmailResponse> {
+        accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): AxiosPromise<VerifyEmailResponseResponse> {
             return localVarFp.accountsVerifyEmailRetrieve(token, uid, options).then((request) => request(axios, basePath));
         },
     };
@@ -641,6 +739,17 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
  * @extends {BaseAPI}
  */
 export class AccountsApi extends BaseAPI {
+    /**
+     * 
+     * @param {ChangePasswordRequest} changePasswordRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsChangePasswordCreate(changePasswordRequest: ChangePasswordRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsChangePasswordCreate(changePasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {LoginSerializerRequest} loginSerializerRequest 
@@ -676,13 +785,13 @@ export class AccountsApi extends BaseAPI {
 
     /**
      * 
-     * @param {SignUp} signUp 
+     * @param {SignupRequest} signupRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountsApi
      */
-    public accountsSignupCreate(signUp: SignUp, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).accountsSignupCreate(signUp, options).then((request) => request(this.axios, this.basePath));
+    public accountsSignupCreate(signupRequest: SignupRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsSignupCreate(signupRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
