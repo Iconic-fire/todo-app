@@ -62,3 +62,12 @@ class ChangePasswordRequestSerializer(serializers.Serializer):
 
 class ChangePasswordResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+class PasswordResetErrorSerializer(serializers.Serializer):
+    error = serializers.CharField()
