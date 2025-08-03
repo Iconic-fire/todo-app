@@ -40,3 +40,6 @@ class SignupRequestSerializer(serializers.ModelSerializer):
 class SignUpSerializerResponse(serializers.Serializer):
     message = serializers.CharField()
     email = serializers.EmailField()
+
+class VerifyEmailResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
