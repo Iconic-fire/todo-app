@@ -16,6 +16,9 @@ from accounts.serializers import (
     LoginSerializerRequest, 
     LoginSerializerResponse, 
     LogoutSerializer,
+    PasswordResetErrorSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetResponseSerializer,
     SignupRequestSerializer,
     SignUpSerializerResponse, 
     VerifyEmailResponseSerializer,
@@ -129,6 +132,7 @@ class VerifyEmailView(GenericAPIView):
         }
     )
     def get(self, request): 
+        # TODO: use serializer for query params
         uid = request.query_params.get('uid')
         token = request.query_params.get('token')
 
@@ -169,3 +173,46 @@ class ChangePasswordView(GenericAPIView):
             ChangePasswordResponseSerializer({"message": "Password changed successfully."}).data,
             status=status.HTTP_200_OK
         )
+
+
+class PasswordResetView(GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetRequestSerializer
+
+    @extend_schema(
+        request=PasswordResetRequestSerializer, 
+        responses={
+            status.HTTP_200_OK: PasswordResetResponseSerializer,
+            status.HTTP_404_NOT_FOUND: PasswordResetErrorSerializer
+        }  
+    )
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        try:
+            user = User.objects.get(email=email)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            frontend_url=getattr(settings, 'FRONTEND_URL')
+            assert frontend_url, "FRONTEND_URL must be set in settings.py"
+            reset_url = f"{frontend_url}/verify-email/?uid={uid}&token={token}"
+
+            print(f"Reset your password by clicking here: {reset_url}")
+            
+            # TODO: configure email settings and send reset email
+            # send_mail(
+            #     "Reset your password",
+            #     f"Click the link: {reset_url}",
+            #     'noreply@example.com',
+            #     [user.email],
+            # )
+            return Response(
+                PasswordResetResponseSerializer({"message": "Password reset link sent to your email."}).data, 
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                PasswordResetErrorSerializer({"error": "No user with this email."}).data,
+                status=status.HTTP_404_NOT_FOUND
+            )
