@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { setNavigate } from "./auth/redirects";
+import Signup from "./pages/Signup";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const navigate = useNavigate();
@@ -17,6 +19,8 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/" element={<ProtectedRoute />}>  
         <Route index element={<Home />} />
       </Route>
