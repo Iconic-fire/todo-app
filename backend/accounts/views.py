@@ -19,6 +19,7 @@ from accounts.serializers import (
     PasswordResetErrorSerializer,
     PasswordResetRequestSerializer,
     PasswordResetResponseSerializer,
+    PasswordResetValidateResponseSerializer,
     SignupRequestSerializer,
     SignUpSerializerResponse, 
     VerifyEmailResponseSerializer,
@@ -139,6 +140,7 @@ class VerifyEmailView(GenericAPIView):
         try:
             uid = urlsafe_base64_decode(uid).decode()
             user = User.objects.get(pk=uid)
+        # TODO: handle specific exceptions
         except Exception:
             # print("Invalid UID")
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -196,7 +198,7 @@ class PasswordResetView(GenericAPIView):
             token = default_token_generator.make_token(user)
             frontend_url=getattr(settings, 'FRONTEND_URL')
             assert frontend_url, "FRONTEND_URL must be set in settings.py"
-            reset_url = f"{frontend_url}/verify-email/?uid={uid}&token={token}"
+            reset_url = f"{frontend_url}/reset-password-confirm/?uid={uid}&token={token}"
 
             print(f"Reset your password by clicking here: {reset_url}")
             
@@ -216,3 +218,47 @@ class PasswordResetView(GenericAPIView):
                 PasswordResetErrorSerializer({"error": "No user with this email."}).data,
                 status=status.HTTP_404_NOT_FOUND
             )
+
+class PasswordResetValidateView(GenericAPIView):
+    permission_classes = [AllowAny]
+
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="uid",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="User ID encoded in base64"
+            ),
+            OpenApiParameter(
+                name="token",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="Token for email verification"
+            )
+        ],
+        responses={
+            status.HTTP_200_OK: PasswordResetValidateResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: {}
+        }
+    )
+    def get(self, request):
+        uidb64 = request.query_params.get('uid')
+        token = request.query_params.get('token')
+
+        if not uidb64 or not token:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            return Response(
+                PasswordResetValidateResponseSerializer({'message': 'Token is valid'}).data, 
+                status=status.HTTP_200_OK
+            )
+        return Response(status=status.HTTP_400_BAD_REQUEST)
