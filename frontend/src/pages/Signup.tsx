@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { getRefreshToken, isTokenExpired } from "../auth/utils";
 import { accountsApi } from "../api/main";
 
@@ -25,6 +25,12 @@ function Signup() {
     setFieldErrors({});
     setError(null);
     setLoading(true);
+
+    if (password !== confirmPassword) {
+      setFieldErrors({ confirmPassword: "Passwords do not match." });
+      return;
+    }
+
 
     try {
       await accountsApi.accountsSignupCreate({
@@ -140,9 +146,9 @@ function Signup() {
 
         <div className="mt-4 text-sm flex justify-center gap-1">
           <p className="text-gray-600 dark:text-gray-400">Already have an account?</p>
-          <a className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" onClick={() => navigate("/login")}>
-            Log in
-          </a>
+          <Link className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" to="/login">
+            Login
+          </Link>
         </div>
       </div>
     </div>
