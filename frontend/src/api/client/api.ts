@@ -144,6 +144,90 @@ export interface PaginatedTodoList {
     'results': Array<Todo>;
 }
 /**
+ * 
+ * @export
+ * @interface PasswordResetConfirmationRequest
+ */
+export interface PasswordResetConfirmationRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetConfirmationRequest
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetConfirmationRequest
+     */
+    'password2': string;
+}
+/**
+ * 
+ * @export
+ * @interface PasswordResetConfirmationResponse
+ */
+export interface PasswordResetConfirmationResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetConfirmationResponse
+     */
+    'message': string;
+}
+/**
+ * 
+ * @export
+ * @interface PasswordResetError
+ */
+export interface PasswordResetError {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetError
+     */
+    'error': string;
+}
+/**
+ * 
+ * @export
+ * @interface PasswordResetRequest
+ */
+export interface PasswordResetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetRequest
+     */
+    'email': string;
+}
+/**
+ * 
+ * @export
+ * @interface PasswordResetResponse
+ */
+export interface PasswordResetResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetResponse
+     */
+    'message': string;
+}
+/**
+ * 
+ * @export
+ * @interface PasswordResetValidateResponse
+ */
+export interface PasswordResetValidateResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof PasswordResetValidateResponse
+     */
+    'message': string;
+}
+/**
  * Todo Serializer
  * @export
  * @interface PatchedTodo
@@ -326,13 +410,13 @@ export interface Tokens {
 /**
  * 
  * @export
- * @interface VerifyEmailResponseResponse
+ * @interface VerifyEmailResponse
  */
-export interface VerifyEmailResponseResponse {
+export interface VerifyEmailResponse {
     /**
      * 
      * @type {string}
-     * @memberof VerifyEmailResponseResponse
+     * @memberof VerifyEmailResponse
      */
     'message': string;
 }
@@ -461,6 +545,98 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {PasswordResetConfirmationRequest} passwordResetConfirmationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsPasswordResetConfirmCreate: async (token: string, uid: string, passwordResetConfirmationRequest: PasswordResetConfirmationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('accountsPasswordResetConfirmCreate', 'token', token)
+            // verify required parameter 'uid' is not null or undefined
+            assertParamExists('accountsPasswordResetConfirmCreate', 'uid', uid)
+            // verify required parameter 'passwordResetConfirmationRequest' is not null or undefined
+            assertParamExists('accountsPasswordResetConfirmCreate', 'passwordResetConfirmationRequest', passwordResetConfirmationRequest)
+            const localVarPath = `/api/accounts/password-reset-confirm/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (token !== undefined) {
+                localVarQueryParameter['token'] = token;
+            }
+
+            if (uid !== undefined) {
+                localVarQueryParameter['uid'] = uid;
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passwordResetConfirmationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {PasswordResetRequest} passwordResetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsPasswordResetCreate: async (passwordResetRequest: PasswordResetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'passwordResetRequest' is not null or undefined
+            assertParamExists('accountsPasswordResetCreate', 'passwordResetRequest', passwordResetRequest)
+            const localVarPath = `/api/accounts/password-reset/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(passwordResetRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
          * @param {TokenRefresh} tokenRefresh 
          * @param {*} [options] Override http request option.
@@ -489,6 +665,53 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(tokenRefresh, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsResetPasswordValidateRetrieve: async (token: string, uid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('accountsResetPasswordValidateRetrieve', 'token', token)
+            // verify required parameter 'uid' is not null or undefined
+            assertParamExists('accountsResetPasswordValidateRetrieve', 'uid', uid)
+            const localVarPath = `/api/accounts/reset-password-validate/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication jwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (token !== undefined) {
+                localVarQueryParameter['token'] = token;
+            }
+
+            if (uid !== undefined) {
+                localVarQueryParameter['uid'] = uid;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -628,6 +851,32 @@ export const AccountsApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {PasswordResetConfirmationRequest} passwordResetConfirmationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsPasswordResetConfirmCreate(token: string, uid: string, passwordResetConfirmationRequest: PasswordResetConfirmationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PasswordResetConfirmationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsPasswordResetConfirmCreate(token, uid, passwordResetConfirmationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsPasswordResetConfirmCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {PasswordResetRequest} passwordResetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsPasswordResetCreate(passwordResetRequest: PasswordResetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PasswordResetResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsPasswordResetCreate(passwordResetRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsPasswordResetCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
          * @param {TokenRefresh} tokenRefresh 
          * @param {*} [options] Override http request option.
@@ -637,6 +886,19 @@ export const AccountsApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.accountsRefreshCreate(tokenRefresh, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsRefreshCreate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async accountsResetPasswordValidateRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PasswordResetValidateResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsResetPasswordValidateRetrieve(token, uid, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsResetPasswordValidateRetrieve']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -658,7 +920,7 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VerifyEmailResponseResponse>> {
+        async accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VerifyEmailResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.accountsVerifyEmailRetrieve(token, uid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsVerifyEmailRetrieve']?.[localVarOperationServerIndex]?.url;
@@ -702,6 +964,26 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.accountsLogoutCreate(logout, options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {PasswordResetConfirmationRequest} passwordResetConfirmationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsPasswordResetConfirmCreate(token: string, uid: string, passwordResetConfirmationRequest: PasswordResetConfirmationRequest, options?: RawAxiosRequestConfig): AxiosPromise<PasswordResetConfirmationResponse> {
+            return localVarFp.accountsPasswordResetConfirmCreate(token, uid, passwordResetConfirmationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {PasswordResetRequest} passwordResetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsPasswordResetCreate(passwordResetRequest: PasswordResetRequest, options?: RawAxiosRequestConfig): AxiosPromise<PasswordResetResponse> {
+            return localVarFp.accountsPasswordResetCreate(passwordResetRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
          * @param {TokenRefresh} tokenRefresh 
          * @param {*} [options] Override http request option.
@@ -709,6 +991,16 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
          */
         accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig): AxiosPromise<TokenRefresh> {
             return localVarFp.accountsRefreshCreate(tokenRefresh, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} token Token for email verification
+         * @param {string} uid User ID encoded in base64
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        accountsResetPasswordValidateRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): AxiosPromise<PasswordResetValidateResponse> {
+            return localVarFp.accountsResetPasswordValidateRetrieve(token, uid, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -726,7 +1018,7 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): AxiosPromise<VerifyEmailResponseResponse> {
+        accountsVerifyEmailRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig): AxiosPromise<VerifyEmailResponse> {
             return localVarFp.accountsVerifyEmailRetrieve(token, uid, options).then((request) => request(axios, basePath));
         },
     };
@@ -773,6 +1065,30 @@ export class AccountsApi extends BaseAPI {
     }
 
     /**
+     * 
+     * @param {string} token Token for email verification
+     * @param {string} uid User ID encoded in base64
+     * @param {PasswordResetConfirmationRequest} passwordResetConfirmationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsPasswordResetConfirmCreate(token: string, uid: string, passwordResetConfirmationRequest: PasswordResetConfirmationRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsPasswordResetConfirmCreate(token, uid, passwordResetConfirmationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {PasswordResetRequest} passwordResetRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsPasswordResetCreate(passwordResetRequest: PasswordResetRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsPasswordResetCreate(passwordResetRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
      * @param {TokenRefresh} tokenRefresh 
      * @param {*} [options] Override http request option.
@@ -781,6 +1097,18 @@ export class AccountsApi extends BaseAPI {
      */
     public accountsRefreshCreate(tokenRefresh: TokenRefresh, options?: RawAxiosRequestConfig) {
         return AccountsApiFp(this.configuration).accountsRefreshCreate(tokenRefresh, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} token Token for email verification
+     * @param {string} uid User ID encoded in base64
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountsApi
+     */
+    public accountsResetPasswordValidateRetrieve(token: string, uid: string, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsResetPasswordValidateRetrieve(token, uid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
