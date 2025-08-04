@@ -39,7 +39,7 @@ class SignupRequestSerializer(serializers.ModelSerializer):
     
 class SignUpSerializerResponse(serializers.Serializer):
     message = serializers.CharField()
-    email = serializers.EmailField()
+    email = serializers.EmailField()    
 
 class VerifyEmailResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
@@ -71,3 +71,6 @@ class PasswordResetResponseSerializer(serializers.Serializer):
 
 class PasswordResetErrorSerializer(serializers.Serializer):
     error = serializers.CharField()
+
+class PasswordResetValidateResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
