@@ -16,6 +16,8 @@ from accounts.serializers import (
     LoginSerializerRequest, 
     LoginSerializerResponse, 
     LogoutSerializer,
+    PasswordResetConfirmationRequestSerializer,
+    PasswordResetConfirmationResponseSerializer,
     PasswordResetErrorSerializer,
     PasswordResetRequestSerializer,
     PasswordResetResponseSerializer,
@@ -261,4 +263,56 @@ class PasswordResetValidateView(GenericAPIView):
                 PasswordResetValidateResponseSerializer({'message': 'Token is valid'}).data, 
                 status=status.HTTP_200_OK
             )
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetConfirmView(GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetConfirmationRequestSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="uid",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="User ID encoded in base64"
+            ),
+            OpenApiParameter(
+                name="token",
+                required=True,
+                type=OpenApiTypes.STR,
+                description="Token for email verification"
+            )
+        ],
+        request=PasswordResetConfirmationRequestSerializer,
+        responses={
+            status.HTTP_200_OK: PasswordResetConfirmationResponseSerializer,
+            status.HTTP_400_BAD_REQUEST: {}
+        }
+    )
+    def post(self, request):
+        uid = request.query_params.get('uid')
+        token = request.query_params.get('token')
+
+        if not uid or not token:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        new_password = serializer.validated_data['password']
+
+        try:
+            uid = urlsafe_base64_decode(uid).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return Response(
+                PasswordResetConfirmationResponseSerializer({"message": "Password has been reset successfully"}).data,
+                status=status.HTTP_200_OK
+            )
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
