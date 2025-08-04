@@ -10,6 +10,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { setNavigate } from "./auth/redirects";
+import ResetPasswordConfirm from "./pages/PasswordResetConfirm";
 
 function App() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/reset-password-confirm" element={<ResetPasswordConfirm />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route index element={<Home />} />
         <Route path="/change-password" element={<ChangePasswordPage />} />
