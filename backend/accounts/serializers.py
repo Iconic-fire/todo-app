@@ -39,7 +39,7 @@ class SignupRequestSerializer(serializers.ModelSerializer):
     
 class SignUpSerializerResponse(serializers.Serializer):
     message = serializers.CharField()
-    email = serializers.EmailField()
+    email = serializers.EmailField()    
 
 class VerifyEmailResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
@@ -61,4 +61,28 @@ class ChangePasswordRequestSerializer(serializers.Serializer):
         return value
 
 class ChangePasswordResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+class PasswordResetErrorSerializer(serializers.Serializer):
+    error = serializers.CharField()
+
+class PasswordResetValidateResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+class PasswordResetConfirmationRequestSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password": "Passwords do not match"})
+        return data
+    
+class PasswordResetConfirmationResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
