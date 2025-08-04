@@ -74,3 +74,15 @@ class PasswordResetErrorSerializer(serializers.Serializer):
 
 class PasswordResetValidateResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
+
+class PasswordResetConfirmationRequestSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password": "Passwords do not match"})
+        return data
+    
+class PasswordResetConfirmationResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
