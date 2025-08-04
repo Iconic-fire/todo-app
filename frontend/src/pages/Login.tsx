@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { getRefreshToken, isTokenExpired, setAccessToken, setRefreshToken } from "../auth/utils";
 import { accountsApi } from "../api/main";
 
@@ -89,9 +89,9 @@ function Login() {
 
         <div className="mt-4 text-sm flex justify-center gap-1">
           <p className="text-gray-600 dark:text-gray-400">Don't have an account?</p>
-          <a className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" onClick={() => navigate("/signup")}>
+          <Link className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" to="/signup">
             Sign up
-          </a>
+          </Link>
         </div>
       </div>
     </div>
