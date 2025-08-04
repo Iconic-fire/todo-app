@@ -168,3 +168,4 @@ CORS_ALLOWED_ORIGINS_BY_ENV = os.getenv('CORS_ALLOWED_ORIGINS', '')
 
 # Split the string into a list of origins, defaulting to an empty list if the string is empty
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_BY_ENV.split(',') if origin.strip()]
+FRONTEND_URL = CORS_ALLOWED_ORIGINS[0]
