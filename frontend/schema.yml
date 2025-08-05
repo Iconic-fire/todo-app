@@ -40,13 +40,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginSerializerRequest'
+              $ref: '#/components/schemas/LoginRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/LoginSerializerRequest'
+              $ref: '#/components/schemas/LoginRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/LoginSerializerRequest'
+              $ref: '#/components/schemas/LoginRequest'
         required: true
       security:
       - jwtAuth: []
@@ -56,7 +56,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginSerializerResponse'
+                $ref: '#/components/schemas/LoginResponse'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginErrorResponse'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginErrorResponse'
           description: ''
   /api/accounts/logout/:
     post:
@@ -458,7 +470,14 @@ components:
           type: string
       required:
       - message
-    LoginSerializerRequest:
+    LoginErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    LoginRequest:
       type: object
       properties:
         email:
@@ -469,7 +488,7 @@ components:
       required:
       - email
       - password
-    LoginSerializerResponse:
+    LoginResponse:
       type: object
       properties:
         message:
