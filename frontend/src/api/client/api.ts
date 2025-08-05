@@ -64,38 +64,51 @@ export interface ChangePasswordResponse {
 /**
  * 
  * @export
- * @interface LoginSerializerRequest
+ * @interface LoginErrorResponse
  */
-export interface LoginSerializerRequest {
+export interface LoginErrorResponse {
     /**
      * 
      * @type {string}
-     * @memberof LoginSerializerRequest
+     * @memberof LoginErrorResponse
+     */
+    'error': string;
+}
+/**
+ * 
+ * @export
+ * @interface LoginRequest
+ */
+export interface LoginRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginRequest
      */
     'email': string;
     /**
      * 
      * @type {string}
-     * @memberof LoginSerializerRequest
+     * @memberof LoginRequest
      */
     'password': string;
 }
 /**
  * 
  * @export
- * @interface LoginSerializerResponse
+ * @interface LoginResponse
  */
-export interface LoginSerializerResponse {
+export interface LoginResponse {
     /**
      * 
      * @type {string}
-     * @memberof LoginSerializerResponse
+     * @memberof LoginResponse
      */
     'message': string;
     /**
      * 
      * @type {Tokens}
-     * @memberof LoginSerializerResponse
+     * @memberof LoginResponse
      */
     'tokens': Tokens;
 }
@@ -468,13 +481,13 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {LoginRequest} loginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsLoginCreate: async (loginSerializerRequest: LoginSerializerRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'loginSerializerRequest' is not null or undefined
-            assertParamExists('accountsLoginCreate', 'loginSerializerRequest', loginSerializerRequest)
+        accountsLoginCreate: async (loginRequest: LoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginRequest' is not null or undefined
+            assertParamExists('accountsLoginCreate', 'loginRequest', loginRequest)
             const localVarPath = `/api/accounts/login/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -498,7 +511,7 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(loginSerializerRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(loginRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -828,12 +841,12 @@ export const AccountsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {LoginRequest} loginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginSerializerResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsLoginCreate(loginSerializerRequest, options);
+        async accountsLoginCreate(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.accountsLoginCreate(loginRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountsApi.accountsLoginCreate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -947,12 +960,12 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @param {LoginSerializerRequest} loginSerializerRequest 
+         * @param {LoginRequest} loginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig): AxiosPromise<LoginSerializerResponse> {
-            return localVarFp.accountsLoginCreate(loginSerializerRequest, options).then((request) => request(axios, basePath));
+        accountsLoginCreate(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): AxiosPromise<LoginResponse> {
+            return localVarFp.accountsLoginCreate(loginRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1044,13 +1057,13 @@ export class AccountsApi extends BaseAPI {
 
     /**
      * 
-     * @param {LoginSerializerRequest} loginSerializerRequest 
+     * @param {LoginRequest} loginRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountsApi
      */
-    public accountsLoginCreate(loginSerializerRequest: LoginSerializerRequest, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).accountsLoginCreate(loginSerializerRequest, options).then((request) => request(this.axios, this.basePath));
+    public accountsLoginCreate(loginRequest: LoginRequest, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).accountsLoginCreate(loginRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
