@@ -4,7 +4,7 @@ import { getRefreshToken, isTokenExpired, setAccessToken, setRefreshToken } from
 import { accountsApi } from "../api/main";
 
 function Login() {
-   const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,7 +37,7 @@ function Login() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">
