@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
@@ -13,8 +14,9 @@ from rest_framework.permissions import AllowAny
 from accounts.serializers import (
     ChangePasswordRequestSerializer,
     ChangePasswordResponseSerializer,
-    LoginSerializerRequest, 
-    LoginSerializerResponse, 
+    LoginErrorResponseSerializer,
+    LoginRequestSerializer, 
+    LoginResponseSerializer, 
     LogoutSerializer,
     PasswordResetConfirmationRequestSerializer,
     PasswordResetConfirmationResponseSerializer,
@@ -37,13 +39,32 @@ def get_tokens_for_user(user):
     }
 
 
+def send_activation_email(user):
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+    frontend_url = getattr(settings, 'FRONTEND_URL')
+    assert frontend_url, "FRONTEND_URL must be set in settings.py"
+    confirm_url = f"{frontend_url}/verify-email/?uid={uid}&token={token}"
+    
+    print(f"Confirm your email by clicking here: {confirm_url}")
+
+    # TODO: configure email settings and send confirmation email
+    # send_mail(
+    #     "Confirm your email",
+    #     f"Click here to confirm: {confirm_url}",
+    #     'noreply@example.com',
+    #     [user.email],
+    # )
+
 class LoginView(GenericAPIView):
-    serializer_class = LoginSerializerRequest
+    serializer_class = LoginRequestSerializer
     permission_classes = [AllowAny]
 
     @extend_schema(
         responses={
-            status.HTTP_200_OK: LoginSerializerResponse
+            status.HTTP_200_OK: LoginResponseSerializer,
+            status.HTTP_401_UNAUTHORIZED: LoginErrorResponseSerializer,
+            status.HTTP_403_FORBIDDEN: LoginErrorResponseSerializer
         }
     )
     def post(self, request, *args, **kwargs):
@@ -51,15 +72,30 @@ class LoginView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
+        user = User.objects.get(email=email)
 
-        user = authenticate(email=email, password=password)
+        if not user or not check_password(password, user.password):
+            return Response(
+                LoginErrorResponseSerializer({"error": "Invalid credentials"}).data,
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
-        if user is None:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        if not user.is_active:
+            # TODO: In future, consider sending a new activation email if old one is expired or user explicitly requests it
+            # we can use cache on email send and check if the user has already been sent an activation email 
+            send_activation_email(user)
+            return Response(
+                LoginErrorResponseSerializer({
+                    "error": "Account not activated. A new activation link has been sent to your email."
+                }).data,
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         tokens = get_tokens_for_user(user)
-        # TODO: store refresh token to client cookie http only
-        return Response({"message": "Login successful", "tokens": tokens})
+        return Response(
+            LoginResponseSerializer({"message": "Login successful", "tokens": tokens}).data,
+            status=status.HTTP_200_OK
+        )
 
 class LogoutView(GenericAPIView):
     serializer_class = LogoutSerializer
@@ -91,21 +127,7 @@ class SignupView(GenericAPIView):
         serializer = SignupRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(is_active=False)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        frontend_url=getattr(settings, 'FRONTEND_URL')
-        assert frontend_url, "FRONTEND_URL must be set in settings.py"
-        confirm_url = f"{frontend_url}/verify-email/?uid={uid}&token={token}"
-        
-        print(f"Confirm your email by clicking here: {confirm_url}")
-
-        # TODO: configure email settings and send confirmation email
-        # send_mail(
-        #     "Confirm your email",
-        #     f"Click here to confirm: {confirm_url}",
-        #     'noreply@example.com',
-        #     [user.email],
-        # )
+        send_activation_email(user)
         return Response(
             SignUpSerializerResponse({"message": "User created successfully.", "email": user.email}).data,
             status=status.HTTP_201_CREATED
