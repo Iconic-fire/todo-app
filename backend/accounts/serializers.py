@@ -9,13 +9,16 @@ class TokensSerializer(serializers.Serializer):
     access = serializers.CharField()
     refresh = serializers.CharField()
 
-class LoginSerializerRequest(serializers.Serializer):
+class LoginRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
-class LoginSerializerResponse(serializers.Serializer):
+class LoginResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
     tokens = TokensSerializer()
+
+class LoginErrorResponseSerializer(serializers.Serializer):
+    error = serializers.CharField()
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
