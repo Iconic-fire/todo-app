@@ -93,6 +93,13 @@ function Login() {
             Sign up
           </Link>
         </div>
+
+        <div className="mt-2 text-sm flex justify-center gap-1">
+          <p className="text-gray-600 dark:text-gray-400">Forgot your password?</p>
+          <Link className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer" to="/reset-password">
+            Reset it
+          </Link>
+        </div>
       </div>
     </div>
   );
