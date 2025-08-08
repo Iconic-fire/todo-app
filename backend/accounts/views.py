@@ -29,6 +29,7 @@ from accounts.serializers import (
 
 User = get_user_model()
 
+# TODO: Set up a cron job for flushing expired tokens daily
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {

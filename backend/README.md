@@ -58,3 +58,9 @@
     ```sh
     python3 manage.py spectacular --validate --color --file schema.yml
     ```
+
+# Clearing Expired Tokens
+
+    ```sh
+    python3 manage.py flushexpiredtokens
+    ```
