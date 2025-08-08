@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, getRefreshToken, isTokenExpired, removeTokens, setAccessToken } from "../auth/utils";
+import { getAccessToken, getRefreshToken, isTokenExpired, removeTokens, setAccessToken, setRefreshToken } from "../auth/utils";
 import { redirectToLogin } from "../auth/redirects";
 
 const TOKEN_PREFIX = "Bearer";
@@ -79,11 +79,12 @@ axiosInstance.interceptors.response.use(
                     `${API_BASE_URL}/api/accounts/refresh/`,
                     { refresh: refreshToken }
                 );
-                const newToken = response.data.access;
-                setAccessToken(newToken);
-                processQueue(null, newToken);
+                const { access: newAccessToken, refresh: newRefreshToken } = response.data
+                setAccessToken(newAccessToken);
+                setRefreshToken(newRefreshToken);
+                processQueue(null, newAccessToken);
 
-                originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${newToken}`;
+                originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${newAccessToken}`;
                 return axiosInstance(originalRequest);
             } catch (err) {
                 processQueue(err, null);
