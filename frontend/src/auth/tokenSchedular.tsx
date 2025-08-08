@@ -1,6 +1,6 @@
 // src/auth/tokenScheduler.ts
 import axios from "axios";
-import { getRefreshToken, isTokenExpired, removeTokens, setAccessToken } from "./utils";
+import { getRefreshToken, isTokenExpired, removeTokens, setAccessToken, setRefreshToken } from "./utils";
 import { redirectToLogin } from "./redirects";
 import { API_BASE_URL } from "../api/axios";
 
@@ -28,9 +28,10 @@ export function startTokenRefreshScheduler() {
                 refresh: refreshToken,
             });
 
-            const newAccessToken = response.data.access;
-            if (newAccessToken) {
-                setAccessToken(newAccessToken);
+            const { access, refresh } = response.data;
+            if (access) {
+                setAccessToken(access);
+                setRefreshToken(refresh);
                 console.log("[Scheduler] Access token refreshed");
             }
         } catch (error) {
