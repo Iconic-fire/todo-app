@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { getRefreshToken, isTokenExpired, setAccessToken, setRefreshToken } from "../auth/utils";
+import { setAccessToken } from "../auth/utils";
 import { accountsApi } from "../api/main";
 
 function Login() {
@@ -10,13 +10,9 @@ function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = getRefreshToken();
-    if (token && !isTokenExpired(token)) {
-      navigate("/", { replace: true });
-    }
-  }, [navigate]);
 
+  // TODO: if already logged in navigate to dashboard
+  
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -27,9 +23,9 @@ function Login() {
         email,
         password,
       });
-      const { access, refresh } = response.data.tokens;
-      setAccessToken(access);
-      setRefreshToken(refresh);
+      // const { access, refresh } = response.data.tokens;
+      setAccessToken(response.data.token);
+      // setRefreshToken(refresh);
       navigate("/");
     } catch (err: any) {
       setError(err.response?.data?.error || "Login failed");

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { getRefreshToken, isTokenExpired } from "../auth/utils";
+import axios from "axios";
 import { accountsApi } from "../api/main";
+import { API_BASE_URL } from "../api/axios";
+import { setAccessToken } from "../auth/utils";
 
 function Signup() {
   const [email, setEmail] = useState<string>("");
@@ -13,11 +15,29 @@ function Signup() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  // Check if user is already logged in navigate to dashboard
+
+
   useEffect(() => {
-    const token = getRefreshToken();
-    if (token && !isTokenExpired(token)) {
-      navigate("/", { replace: true });
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/accounts/refresh/`,
+          null,
+          { withCredentials: true } // Send refresh token cookie
+        );
+
+        const { access } = response.data;
+        if (access) {
+          setAccessToken(access);
+          navigate("/", { replace: true });
+        }
+      } catch (err) {
+        // Not authenticated → do nothing, user stays on signup
+      }
+    };
+
+    checkAuth();
   }, [navigate]);
 
   async function handleSignup(e: React.FormEvent) {
@@ -74,7 +94,7 @@ function Signup() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">

@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, getRefreshToken, isTokenExpired, removeTokens, setAccessToken, setRefreshToken } from "../auth/utils";
+import { getAccessToken, removeTokens, setAccessToken } from "../auth/utils";
 import { redirectToLogin } from "../auth/redirects";
 
 const TOKEN_PREFIX = "Bearer";
@@ -25,11 +25,12 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 const axiosInstance = axios.create();
+axios.defaults.withCredentials = true;
 
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const token = getAccessToken();
-    if (token) {
-        config.headers.Authorization = `${TOKEN_PREFIX} ${token}`;
+    const accessToken = getAccessToken();
+    if (accessToken) {
+        config.headers.Authorization = `${TOKEN_PREFIX} ${accessToken}`;
     }
     return config;
 });
@@ -59,29 +60,13 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshToken = getRefreshToken();
-                
-                // if refresh token is not present redirect to login
-                if (!refreshToken) {
-                    removeTokens();
-                    redirectToLogin();
-                    return Promise.reject('No refresh token available');
-                }
-
-                // if refresh token is expired redirect to login
-                if (isTokenExpired(refreshToken)) {
-                    removeTokens();
-                    redirectToLogin();
-                    return Promise.reject('Refresh token expired');
-                }
-
                 const response = await axios.post(
                     `${API_BASE_URL}/api/accounts/refresh/`,
-                    { refresh: refreshToken }
+                    null,
+                    { withCredentials: true }
                 );
-                const { access: newAccessToken, refresh: newRefreshToken } = response.data
+                const { token: newAccessToken } = response.data;
                 setAccessToken(newAccessToken);
-                setRefreshToken(newRefreshToken);
                 processQueue(null, newAccessToken);
 
                 originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${newAccessToken}`;

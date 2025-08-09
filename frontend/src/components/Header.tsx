@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router";
-import { getRefreshToken, removeTokens } from "../auth/utils";
+import { removeTokens } from "../auth/utils";
 import { accountsApiAuthenticated } from "../api/main";
 
 function Header() {
@@ -9,11 +9,9 @@ function Header() {
 
   async function handleLogout() {
     setIsLoggingOut(true);
+    
     try {
-      const refresh = getRefreshToken();
-      if (refresh) {
-        await accountsApiAuthenticated.accountsLogoutCreate({ refresh });
-      }
+      await accountsApiAuthenticated.accountsLogoutCreate({});
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {

@@ -11,8 +11,10 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { setNavigate } from "./auth/redirects";
 import ResetPasswordConfirm from "./pages/PasswordResetConfirm";
-import { getRefreshToken, isTokenExpired } from "./auth/utils";
+import { setAccessToken } from "./auth/utils";
 import { startTokenRefreshScheduler, stopTokenRefreshScheduler } from "./auth/tokenSchedular";
+import { API_BASE_URL } from "./api/axios";
+import axios from "axios";
 
 
 const PUBLIC_ROUTES = [
@@ -33,16 +35,32 @@ function App() {
   useEffect(() => {
     const currentPath = location.pathname;
     const isPublic = PUBLIC_ROUTES.includes(currentPath);
-    const refreshToken = getRefreshToken();
 
-    if (!isPublic && refreshToken && !isTokenExpired(refreshToken)) {
-      // User is on a protected route and has a valid token
-      startTokenRefreshScheduler();
-    } else {
-      // Either user is on a public route or token is missing/expired
+    if (isPublic) {
       stopTokenRefreshScheduler();
+      return;
     }
-  }, [location.pathname]);
+
+    // On protected route → try to refresh token using cookie
+    const attemptRefresh = async () => {
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/accounts/refresh/`,
+          null,
+          { withCredentials: true }
+        );
+
+        const { token } = response.data;
+        setAccessToken(token);
+        startTokenRefreshScheduler();
+      } catch (err) {
+        stopTokenRefreshScheduler();
+        navigate("/login", { replace: true });
+      }
+    };
+
+    attemptRefresh();
+  }, [location.pathname, navigate]);
 
   return (
     <Routes>

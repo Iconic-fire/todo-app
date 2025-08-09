@@ -1,13 +1,8 @@
-import { Navigate, Outlet } from "react-router";
-import { getRefreshToken, isTokenExpired } from "./utils";
+import { Outlet } from "react-router";
 import Header from "../components/Header";
 
-function ProtectedRoute( ) {
-  const token = getRefreshToken();
-
-  if (!token || isTokenExpired(token)) {
-    return <Navigate to="/login" replace />;
-  }
+function ProtectedRoute() {
+  // TODO: if not already logged in navigate to login page
 
   return <>
     <Header />
