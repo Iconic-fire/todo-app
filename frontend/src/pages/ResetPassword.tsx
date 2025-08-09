@@ -1,5 +1,5 @@
-import { useState} from "react";
-import { accountsApiAuthenticated } from "../api/main";
+import { useState } from "react";
+import { unauthenticatedAccountsApi } from "../api";
 import { Link } from "react-router";
 
 function ResetPassword() {
@@ -14,9 +14,9 @@ function ResetPassword() {
     setLoading(true);
 
     try {
-        const response = await accountsApiAuthenticated.accountsPasswordResetCreate({
-          email,
-        });
+      const response = await unauthenticatedAccountsApi.accountsPasswordResetCreate({
+        email,
+      });
 
       // Reset form fields
       setEmail('');
@@ -33,7 +33,7 @@ function ResetPassword() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">
