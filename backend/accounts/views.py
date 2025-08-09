@@ -6,6 +6,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
@@ -41,15 +42,22 @@ def get_tokens_for_user(user):
         "access": str(refresh.access_token),
     }
 
-
-# TODO: handle rest_framework_simplejwt.exceptions.TokenError: Token is blacklisted
 class CookieTokenRefreshView(TokenRefreshView):
     serializer_class = CookieTokenRefreshSerializer
 
     @extend_schema(request={})
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data={})
-        serializer.is_valid(raise_exception=True)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError:
+            response = Response(
+                {"detail": "Refresh token is invalid or blacklisted."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            response.delete_cookie("refresh")
+            return response
 
         access_token = serializer.validated_data.get("access")
         refresh_token = serializer.validated_data.get("refresh")
