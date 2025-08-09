@@ -2,7 +2,7 @@ import { useState } from "react";
 import { unauthenticatedAccountsApi } from "../api";
 import { Link } from "react-router";
 
-function ResetPassword() {
+export function ResetPassword() {
   const [email, setEmail] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -91,5 +91,3 @@ function ResetPassword() {
     </div>
   );
 }
-
-export default ResetPassword;

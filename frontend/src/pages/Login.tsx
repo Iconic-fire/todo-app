@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../auth";
 
-function Login() {
+export function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -98,5 +98,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

@@ -1,14 +1,16 @@
 import { Routes, Route } from "react-router";
 import "./App.css";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Signup from "./pages/Signup";
-import VerifyEmail from "./pages/VerifyEmail";
-import ChangePasswordPage from "./pages/ChangePassword";
-import ResetPassword from "./pages/ResetPassword";
-import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./auth";
-import ResetPasswordConfirm from "./pages/PasswordResetConfirm";
+import {
+  ChangePassword,
+  Home,
+  Login,
+  NotFound,
+  ResetPassword,
+  ResetPasswordConfirm,
+  Signup,
+  VerifyEmail,
+} from "./pages";
 
 function App() {
   return (
@@ -20,7 +22,7 @@ function App() {
       <Route path="/reset-password-confirm" element={<ResetPasswordConfirm />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route index element={<Home />} />
-        <Route path="/change-password" element={<ChangePasswordPage />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

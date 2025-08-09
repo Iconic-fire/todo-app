@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { accountsApi } from "../api";
 import { useAuth } from "../auth";
 
-function Signup() {
+export function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -155,5 +155,3 @@ function Signup() {
     </div>
   );
 }
-
-export default Signup;

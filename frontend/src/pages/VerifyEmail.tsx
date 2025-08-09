@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import { accountsApi } from '../api';
 
-function VerifyEmail() {
+export function VerifyEmail() {
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<string>('');
@@ -64,5 +64,3 @@ function VerifyEmail() {
         </div>
     );
 }
-
-export default VerifyEmail;

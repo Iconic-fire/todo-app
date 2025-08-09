@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
 import { accountsApi } from "../api";
 
-function ResetPasswordConfirm() {
+export function ResetPasswordConfirm() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -164,5 +164,3 @@ function ResetPasswordConfirm() {
         </div>
     );
 }
-
-export default ResetPasswordConfirm;

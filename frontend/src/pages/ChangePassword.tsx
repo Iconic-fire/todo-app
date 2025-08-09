@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { unauthenticatedAccountsApi } from "../api";
 
-function PasswordChange() {
+export function ChangePassword() {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -131,5 +131,3 @@ function PasswordChange() {
     </div>
   );
 }
-
-export default PasswordChange;

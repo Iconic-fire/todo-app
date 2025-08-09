@@ -5,7 +5,7 @@ import { CreateTodoForm, CreateTodoPayload } from "../components";
 import { TodoList } from "../components";
 import { NoRecordFound } from "../components";
 
-function Home() {
+export function Home() {
   const [todos, setTodos] = useState<TodoObj[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [failed, setFailed] = useState<boolean>(false);
@@ -97,5 +97,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
