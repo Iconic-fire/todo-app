@@ -92,7 +92,14 @@ class LoginView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        user = User.objects.get(email=email)
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+                return Response(
+                    LoginErrorResponseSerializer({"error": "Invalid credentials"}).data,
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
 
         if not user or not check_password(password, user.password):
             return Response(
