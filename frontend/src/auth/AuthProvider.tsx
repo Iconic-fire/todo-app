@@ -2,8 +2,8 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 import { setNavigate } from "./redirects";
 import { setAccessToken } from "./tokenStore";
 import { scheduleRefreshFromAccessToken, clearScheduledRefresh } from "./tokenScheduler";
-import { accountsApi } from "../api";
-import { useNavigate } from "react-router";
+import { accountsApi, unauthenticatedAccountsApi } from "../api";
+import { useLocation, useNavigate } from "react-router";
 
 type AuthContextType = {
     isAuthenticated: boolean;
@@ -22,6 +22,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const hasInitialized = useRef(false);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -34,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initAuth = async () => {
         try {
             // attempt server-side refresh using cookie; response should contain access token
-            const res = await accountsApi.accountsRefreshCreate();
+            const res = await unauthenticatedAccountsApi.accountsRefreshCreate();
             setAccessToken(res.data.access);
             setIsAuthenticated(true);
             // schedule proactive refresh
@@ -42,6 +43,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (err) {
             setAccessToken(null);
             setIsAuthenticated(false);
+
+            // If user is on the login page and token refresh fails, stay on the login page
+            if (location.pathname !== "/login") {
+                navigate('/login', { replace: true });
+            }
         }
     };
 
