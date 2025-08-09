@@ -104,7 +104,7 @@ class LoginView(GenericAPIView):
 
         tokens = get_tokens_for_user(user)
         response = Response(
-            LoginResponseSerializer({"message": "Login successful", "token": tokens["access"]}).data,
+            LoginResponseSerializer({"message": "Login successful", "access": tokens["access"]}).data,
             status=status.HTTP_200_OK
         )
 
