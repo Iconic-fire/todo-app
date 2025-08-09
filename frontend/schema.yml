@@ -477,11 +477,11 @@ components:
       properties:
         message:
           type: string
-        token:
+        access:
           type: string
       required:
+      - access
       - message
-      - token
     PaginatedTodoList:
       type: object
       required:
