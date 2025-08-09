@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const login = async (email: string, password: string) => {
-        const response = await accountsApi.accountsLoginCreate({
+        const response = await unauthenticatedAccountsApi.accountsLoginCreate({
             email,
             password,
         });

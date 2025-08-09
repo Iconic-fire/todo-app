@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { accountsApi } from "../api";
+import { unauthenticatedAccountsApi } from "../api";
 import { useAuth } from "../auth";
 
 export function Signup() {
@@ -34,7 +34,7 @@ export function Signup() {
 
 
     try {
-      await accountsApi.accountsSignupCreate({
+      await unauthenticatedAccountsApi.accountsSignupCreate({
         email,
         password,
         password2: confirmPassword,
