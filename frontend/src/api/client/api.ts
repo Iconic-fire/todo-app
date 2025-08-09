@@ -129,7 +129,7 @@ export interface LoginResponse {
      * @type {string}
      * @memberof LoginResponse
      */
-    'token': string;
+    'access': string;
 }
 /**
  * 
