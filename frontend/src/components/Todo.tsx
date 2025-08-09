@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { PatchedTodo, Todo as TodoObj } from "../client";
-import DetailModal from "./TodoDetail";
-import Confirmation from "./Confirmation";
-import UpdateTodoForm from "./form/UpdateForm";
+import { DetailModal } from "./TodoDetail";
+import { Confirmation } from "./Confirmation";
+import { UpdateTodoForm } from "./form/UpdateForm";
 
 interface TodoProps {
   todo: TodoObj;
@@ -10,7 +10,7 @@ interface TodoProps {
   updateTodo: (payload: PatchedTodo) => void;
 }
 
-function Todo({ todo, onDelete, updateTodo }: TodoProps) {
+export function Todo({ todo, onDelete, updateTodo }: TodoProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showMarkAsCompleteConfirmation, setShowMarkAsCompleteConfirmation] =
@@ -225,5 +225,3 @@ function Todo({ todo, onDelete, updateTodo }: TodoProps) {
     </li>
   );
 }
-
-export default Todo;

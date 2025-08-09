@@ -1,5 +1,5 @@
 import { PatchedTodo, Todo as TodoObj } from "../client";
-import Todo from "./Todo";
+import { Todo } from "./Todo";
 
 interface TodoListProps {
   todos: TodoObj[];
@@ -7,7 +7,7 @@ interface TodoListProps {
   updateTodoHandler: (id: number, payload: PatchedTodo) => void;
 }
 
-function TodoList({ todos, deleteHandler, updateTodoHandler }: TodoListProps) {
+export function TodoList({ todos, deleteHandler, updateTodoHandler }: TodoListProps) {
   return (
     <ul className="w-full md:w-1/2 flex flex-col gap-y-2">
       {todos.map((todo) => (
@@ -24,4 +24,3 @@ function TodoList({ todos, deleteHandler, updateTodoHandler }: TodoListProps) {
   );
 }
 
-export default TodoList;

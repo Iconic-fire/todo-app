@@ -15,7 +15,7 @@ interface UpdateTodoFormProps {
   onSubmit: (formData: PatchedTodo) => void;
 }
 
-function UpdateTodoForm({
+export function UpdateTodoForm({
   todo,
   isVisible,
   onClose,
@@ -194,4 +194,3 @@ function UpdateTodoForm({
   );
 }
 
-export default UpdateTodoForm;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, NavLink } from "react-router";
 import { useAuth } from "../auth";
 
-function Header() {
+export function Header() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const { logout } = useAuth();
@@ -40,5 +40,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;

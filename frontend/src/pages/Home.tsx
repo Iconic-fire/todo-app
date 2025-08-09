@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { todoApi } from "../api";
 import { PatchedTodo, Todo as TodoObj } from "../client";
-import CreateTodoForm, { CreateTodoPayload } from "../components/form/CreateForm";
-import TodoList from "../components/TodoList";
-import NoRecordFound from "../components/Empty";
+import { CreateTodoForm, CreateTodoPayload } from "../components";
+import { TodoList } from "../components";
+import { NoRecordFound } from "../components";
 
 function Home() {
   const [todos, setTodos] = useState<TodoObj[]>([]);

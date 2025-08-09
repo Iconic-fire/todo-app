@@ -1,7 +1,7 @@
 import { Todo } from "../client";
-import DateInfo from "./Date";
+import { DateInfo } from "./Date";
 
-function DetailModal({
+export function DetailModal({
   todo,
   closeHandler,
 }: {
@@ -72,5 +72,3 @@ function DetailModal({
     </div>
   );
 }
-
-export default DetailModal;

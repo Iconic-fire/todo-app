@@ -7,7 +7,7 @@ interface ConfirmationProps {
   onConfirm: () => void;
 }
 
-const Confirmation: React.FC<ConfirmationProps> = ({
+export const Confirmation: React.FC<ConfirmationProps> = ({
   actionText: text,
   isVisible,
   onClose,
@@ -89,5 +89,3 @@ const Confirmation: React.FC<ConfirmationProps> = ({
     </div>
   );
 };
-
-export default Confirmation;
