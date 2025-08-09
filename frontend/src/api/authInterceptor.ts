@@ -1,6 +1,5 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { setAccessToken } from "../auth/tokenStore";
-import { redirectToLogin } from "../auth/redirects";
+import { setAccessToken, redirectToLogin } from "../auth";
 import { AccountsApi, Configuration } from "../client";
 import { TOKEN_PREFIX, axiosInstance, setAuthorizationHeader } from "./axiosConfig";
 

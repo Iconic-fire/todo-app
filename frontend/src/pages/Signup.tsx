@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { accountsApi } from "../api";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "../auth";
 
 function Signup() {
   const [email, setEmail] = useState<string>("");

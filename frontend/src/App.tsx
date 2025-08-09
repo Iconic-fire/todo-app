@@ -7,7 +7,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ChangePasswordPage from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./auth/ProtectedRoute";
+import { ProtectedRoute } from "./auth";
 import ResetPasswordConfirm from "./pages/PasswordResetConfirm";
 
 function App() {

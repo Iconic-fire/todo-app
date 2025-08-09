@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "../auth";
 
 function Header() {
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "./AuthProvider";
 import Header from "../components/Header";
 
 // ProtectedRoute will redirect to login if not authenticated.
-function ProtectedRoute() {
+export function ProtectedRoute() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
@@ -15,5 +15,3 @@ function ProtectedRoute() {
     <Outlet />
   </>;
 };
-
-export default ProtectedRoute;
