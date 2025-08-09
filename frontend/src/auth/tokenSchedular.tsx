@@ -16,8 +16,8 @@ export function startTokenRefreshScheduler() {
         try {
             const response = await axios.post(`${API_BASE_URL}/api/accounts/refresh/`, {}, { withCredentials: true });
 
-            if (response.data.token) {
-                setAccessToken(response.data.token);
+            if (response.data.access) {
+                setAccessToken(response.data.access);
                 console.log("[Scheduler] Access token refreshed");
             }
         } catch (error) {

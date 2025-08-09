@@ -12,7 +12,7 @@ function Login() {
 
 
   // TODO: if already logged in navigate to dashboard
-  
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -24,7 +24,7 @@ function Login() {
         password,
       });
       // const { access, refresh } = response.data.tokens;
-      setAccessToken(response.data.token);
+      setAccessToken(response.data.access);
       // setRefreshToken(refresh);
       navigate("/");
     } catch (err: any) {
