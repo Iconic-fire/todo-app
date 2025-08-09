@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router";
+import { Routes, Route } from "react-router";
 import "./App.css";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
@@ -9,58 +8,25 @@ import ChangePasswordPage from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import { setNavigate } from "./auth/redirects";
+// import { setNavigate } from "./auth/redirects";
 import ResetPasswordConfirm from "./pages/PasswordResetConfirm";
-import { setAccessToken } from "./auth/utils";
-import { startTokenRefreshScheduler, stopTokenRefreshScheduler } from "./auth/tokenSchedular";
-import { API_BASE_URL } from "./api/axios";
-import axios from "axios";
+import { useEffect } from "react";
+import { accountsApi } from "./api/main";
+// import { setAccessToken } from "./auth/utils";
+// import { startTokenRefreshScheduler, stopTokenRefreshScheduler } from "./auth/tokenScheduler";
+// import { API_BASE_URL } from "./api/axios";
+// import axios from "axios";
 
 
-const PUBLIC_ROUTES = [
-  "/login",
-  "/signup",
-  "/verify-email",
-  "/reset-password",
-  "/reset-password-confirm",
-];
+// const PUBLIC_ROUTES = [
+//   "/login",
+//   "/signup",
+//   "/verify-email",
+//   "/reset-password",
+//   "/reset-password-confirm",
+// ];
 
 function App() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setNavigate(navigate);
-  }, [navigate]);
-
-  useEffect(() => {
-    const currentPath = location.pathname;
-    const isPublic = PUBLIC_ROUTES.includes(currentPath);
-
-    if (isPublic) {
-      stopTokenRefreshScheduler();
-      return;
-    }
-
-    // On protected route → try to refresh token using cookie
-    const attemptRefresh = async () => {
-      try {
-        const response = await axios.post(
-          `${API_BASE_URL}/api/accounts/refresh/`,
-          null,
-          { withCredentials: true }
-        );
-
-        const { token } = response.data;
-        setAccessToken(token);
-        startTokenRefreshScheduler();
-      } catch (err) {
-        stopTokenRefreshScheduler();
-        navigate("/login", { replace: true });
-      }
-    };
-
-    attemptRefresh();
-  }, [location.pathname, navigate]);
 
   return (
     <Routes>

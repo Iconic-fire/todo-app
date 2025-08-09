@@ -93,8 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email,
             password,
         });
-        const access = response.data.token;
-        setAccessToken(access);
+        console.log("Login response:", response.data);
+        setAccessToken(response.data.access);
         setIsAuthenticated(true);
         scheduleRefreshFromAccessToken();
     };

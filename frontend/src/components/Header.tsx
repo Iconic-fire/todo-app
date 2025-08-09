@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router";
 import { removeTokens } from "../auth/utils";
-import { accountsApiAuthenticated } from "../api/main";
+import { useAuth } from "../auth/AuthProvider";
 
 function Header() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+  const { logout } = useAuth();
 
   async function handleLogout() {
     setIsLoggingOut(true);
-    
     try {
-      await accountsApiAuthenticated.accountsLogoutCreate({});
+      // await accountsApiAuthenticated.accountsLogoutCreate({});
+      logout();
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {

@@ -18,3 +18,13 @@ export function isTokenExpired(token: string): boolean {
     return true;
   }
 }
+
+export function getExpiryFromToken(token: string) {
+    try {
+        const payload = token.split(".")[1];
+        const decoded = JSON.parse(atob(payload));
+        return decoded?.exp ? Number(decoded.exp) : null;
+    } catch {
+        return null;
+    }
+}

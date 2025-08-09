@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import axios from "axios";
 import { accountsApi } from "../api/main";
-import { API_BASE_URL } from "../api/axios";
-import { setAccessToken } from "../auth/utils";
+import { useAuth } from "../auth/AuthProvider";
 
 function Signup() {
   const [email, setEmail] = useState<string>("");
@@ -13,32 +11,15 @@ function Signup() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   // Check if user is already logged in navigate to dashboard
-
-
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axios.post(
-          `${API_BASE_URL}/api/accounts/refresh/`,
-          null,
-          { withCredentials: true } // Send refresh token cookie
-        );
-
-        const { access } = response.data;
-        if (access) {
-          setAccessToken(access);
-          navigate("/", { replace: true });
-        }
-      } catch (err) {
-        // Not authenticated → do nothing, user stays on signup
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();

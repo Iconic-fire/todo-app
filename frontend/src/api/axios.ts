@@ -1,88 +1,104 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, removeTokens, setAccessToken } from "../auth/utils";
+import { getAccessToken, setAccessToken } from "../auth/tokenStore";
 import { redirectToLogin } from "../auth/redirects";
 
 const TOKEN_PREFIX = "Bearer";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 type FailedRequest = {
-    resolve: (token: string) => void;
-    reject: (err: any) => void;
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
 };
 
 let isRefreshing = false;
 let failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: any, token: string | null = null) => {
-    failedQueue.forEach(prom => {
-        if (token) {
-            prom.resolve(token);
-        } else {
-            prom.reject(error);
-        }
-    });
-    failedQueue = [];
+  failedQueue.forEach((p) => {
+    if (error) p.reject(error);
+    else p.resolve(token);
+  });
+  failedQueue = [];
 };
 
-const axiosInstance = axios.create();
-axios.defaults.withCredentials = true;
+const plainAxios = axios.create({
+  // baseURL: API_BASE_URL,
+  // withCredentials: true,
+});
+plainAxios.defaults.withCredentials = true;
+
+
+const axiosInstance = axios.create({
+  // baseURL: API_BASE_URL,
+  // withCredentials: true,
+});
+axiosInstance.defaults.withCredentials = true;
 
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const accessToken = getAccessToken();
-    if (accessToken) {
-        config.headers.Authorization = `${TOKEN_PREFIX} ${accessToken}`;
-    }
-    return config;
+  const token = getAccessToken();
+  if (token && config.headers) {
+    config.headers.Authorization = `${TOKEN_PREFIX} ${token}`;
+  }
+  return config;
 });
 
 axiosInstance.interceptors.response.use(
-    (response) => response,
-    async (error: AxiosError) => {
-        const originalRequest = error.config as any;
+  (res) => res,
+  async (err: AxiosError) => {
+    const originalRequest = err.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-        // Token expired, and we're not retrying
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+    if (err.response?.status === 401 && !originalRequest?._retry) {
+      // mark retry so we don't infinite-loop
+      originalRequest._retry = true;
 
-            if (isRefreshing) {
-                // Queue up requests while refreshing
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({
-                        resolve: (token: string) => {
-                            originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${token}`;
-                            resolve(axiosInstance(originalRequest));
-                        },
-                        reject: (err: any) => reject(err),
-                    });
-                });
-            }
+      if (isRefreshing) {
+        // queue request until refresh finishes
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              if (originalRequest.headers) {
+                originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${token}`;
+              }
+              resolve(axiosInstance(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
 
-            isRefreshing = true;
+      isRefreshing = true;
 
-            try {
-                const response = await axios.post(
-                    `${API_BASE_URL}/api/accounts/refresh/`,
-                    null,
-                    { withCredentials: true }
-                );
-                const { token: newAccessToken } = response.data;
-                setAccessToken(newAccessToken);
-                processQueue(null, newAccessToken);
+      try {
+        // call refresh endpoint using plainAxios so this request doesn't use Authorization header
+        // The server should read the HttpOnly refresh cookie and return a new access token (and optionally a new refresh cookie)
+        const refreshResponse = await plainAxios.post("/api/accounts/refresh/", null);
+        const newAccess = refreshResponse.data?.access;
 
-                originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${newAccessToken}`;
-                return axiosInstance(originalRequest);
-            } catch (err) {
-                processQueue(err, null);
-                removeTokens();
-                redirectToLogin();
-                return Promise.reject(err);
-            } finally {
-                isRefreshing = false;
-            }
+        if (!newAccess) {
+          throw new Error("No access token in refresh response");
         }
 
-        return Promise.reject(error);
+        setAccessToken(newAccess);
+        processQueue(null, newAccess);
+
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `${TOKEN_PREFIX} ${newAccess}`;
+        }
+
+        return axiosInstance(originalRequest);
+      } catch (refreshErr) {
+        processQueue(refreshErr, null);
+        setAccessToken(null);
+        // Redirect to login SPA style
+        redirectToLogin();
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
+    return Promise.reject(err);
+  }
 );
 
-export { axiosInstance, API_BASE_URL };
+export {axiosInstance, plainAxios, API_BASE_URL };

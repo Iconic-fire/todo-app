@@ -1,8 +1,17 @@
-import { Outlet } from "react-router";
+import React from "react";
+import { Navigate, Outlet } from "react-router";
+import { useAuth } from "../auth/AuthProvider";
 import Header from "../components/Header";
 
-function ProtectedRoute() {
-  // TODO: if not already logged in navigate to login page
+// ProtectedRoute will redirect to login if not authenticated.
+const ProtectedRoute: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
+  console.log("ProtectedRoute: isAuthenticated", isAuthenticated);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return <>
     <Header />
