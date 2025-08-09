@@ -42,6 +42,7 @@ def get_tokens_for_user(user):
     }
 
 
+# TODO: handle rest_framework_simplejwt.exceptions.TokenError: Token is blacklisted
 class CookieTokenRefreshView(TokenRefreshView):
     serializer_class = CookieTokenRefreshSerializer
 
