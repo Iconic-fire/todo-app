@@ -1,24 +1,3 @@
-export function getAccessToken(): string | null {
-  return localStorage.getItem("access");
-}
-
-export function getRefreshToken(): string | null {
-  return localStorage.getItem("refresh");
-}
-
-export function setAccessToken(token: string): void {
-  localStorage.setItem("access", token);
-}
-
-export function setRefreshToken(token: string): void {
-  localStorage.setItem("refresh", token);
-}
-
-export function removeTokens(): void {
-  localStorage.removeItem("access");
-  localStorage.removeItem("refresh");
-}
-
 export function isTokenExpired(token: string): boolean {
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -26,4 +5,14 @@ export function isTokenExpired(token: string): boolean {
   } catch {
     return true;
   }
+}
+
+export function getExpiryFromToken(token: string) {
+    try {
+        const payload = token.split(".")[1];
+        const decoded = JSON.parse(atob(payload));
+        return decoded?.exp ? Number(decoded.exp) : null;
+    } catch {
+        return null;
+    }
 }
