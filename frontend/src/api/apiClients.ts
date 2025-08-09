@@ -1,4 +1,4 @@
-import { Configuration, AccountsApi, TodosApi } from "./client";
+import { Configuration, AccountsApi, TodosApi } from "../client";
 import { axiosInstance, plainAxios } from "./axiosConfig";
 
 const config = new Configuration();

@@ -1,7 +1,7 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { setAccessToken } from "../auth/tokenStore";
 import { redirectToLogin } from "../auth/redirects";
-import { AccountsApi, Configuration } from "./client";
+import { AccountsApi, Configuration } from "../client";
 import { TOKEN_PREFIX, axiosInstance, setAuthorizationHeader } from "./axiosConfig";
 
 const unauthenticatedAccountsApi = new AccountsApi(new Configuration(), undefined, axiosInstance);

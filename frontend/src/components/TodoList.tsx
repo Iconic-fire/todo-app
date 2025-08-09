@@ -1,4 +1,4 @@
-import { PatchedTodo, Todo as TodoObj } from "../api/client";
+import { PatchedTodo, Todo as TodoObj } from "../client";
 import Todo from "./Todo";
 
 interface TodoListProps {

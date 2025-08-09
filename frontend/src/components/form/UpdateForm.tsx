@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PatchedTodo, Todo } from "../../api/client";
+import { PatchedTodo, Todo } from "../../client";
 
 interface UpdateTodoPayload {
   title: string;
