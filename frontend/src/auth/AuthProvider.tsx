@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { setNavigate } from "./redirects";
 import { setAccessToken } from "./tokenStore";
 import { scheduleRefreshFromAccessToken, clearScheduledRefresh } from "./tokenScheduler";
@@ -22,6 +22,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
+    const hasInitialized = useRef(false);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     // make SPA redirect helper available
@@ -45,8 +46,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     useEffect(() => {
-        // run on mount
-        initAuth();
+        if (!hasInitialized.current) {
+            hasInitialized.current = true;
+            initAuth();
+        }
+
         // setup cross-tab logout listener (BroadcastChannel preferred)
         const bcSupported = typeof window !== "undefined" && "BroadcastChannel" in window;
         let bc: BroadcastChannel | null = null;
