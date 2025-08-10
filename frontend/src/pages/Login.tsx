@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { getRefreshToken, isTokenExpired, setAccessToken, setRefreshToken } from "../auth/utils";
-import { accountsApi } from "../api/main";
+import { useAuth } from "../auth";
 
-function Login() {
+export function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // if already logged in navigate to index page
   useEffect(() => {
-    const token = getRefreshToken();
-    if (token && !isTokenExpired(token)) {
-      navigate("/", { replace: true });
+    if (isAuthenticated) {
+      navigate("/");
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -23,13 +23,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await accountsApi.accountsLoginCreate({
-        email,
-        password,
-      });
-      const { access, refresh } = response.data.tokens;
-      setAccessToken(access);
-      setRefreshToken(refresh);
+      await login(email, password);
       navigate("/");
     } catch (err: any) {
       setError(err.response?.data?.error || "Login failed");
@@ -104,5 +98,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

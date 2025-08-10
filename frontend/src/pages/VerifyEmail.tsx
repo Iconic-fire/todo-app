@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
-import { accountsApi } from '../api/main';
+import { unauthenticatedAccountsApi } from '../api';
 
-function VerifyEmail() {
+export function VerifyEmail() {
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<string>('');
@@ -15,7 +15,7 @@ function VerifyEmail() {
     async function verifyEmail(token: string, uid: string) {
         setLoading(true);
         try {
-            const response = await accountsApi.accountsVerifyEmailRetrieve(token, uid);
+            const response = await unauthenticatedAccountsApi.accountsVerifyEmailRetrieve(token, uid);
             setStatusMessage(response.data.message);
             setSuccess(true);
             // Redirect after a few seconds
@@ -64,5 +64,3 @@ function VerifyEmail() {
         </div>
     );
 }
-
-export default VerifyEmail;

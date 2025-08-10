@@ -3,19 +3,22 @@ from django.contrib.auth.hashers import check_password
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework.generics import GenericAPIView
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from accounts.mails import send_activation_email, send_password_reset_email
+from rest_framework_simplejwt.views import TokenRefreshView
 from accounts.serializers import (
     ChangePasswordRequestSerializer,
     ChangePasswordResponseSerializer,
+    CookieTokenRefreshSerializer,
     LoginErrorResponseSerializer,
     LoginRequestSerializer, 
-    LoginResponseSerializer, 
-    LogoutSerializer,
+    LoginResponseSerializer,
     PasswordResetConfirmationRequestSerializer,
     PasswordResetConfirmationResponseSerializer,
     PasswordResetErrorSerializer,
@@ -26,6 +29,8 @@ from accounts.serializers import (
     SignUpSerializerResponse, 
     VerifyEmailResponseSerializer,
 )
+from django.conf import settings
+
 
 User = get_user_model()
 
@@ -36,6 +41,40 @@ def get_tokens_for_user(user):
         "refresh": str(refresh),
         "access": str(refresh.access_token),
     }
+
+class CookieTokenRefreshView(TokenRefreshView):
+    serializer_class = CookieTokenRefreshSerializer
+
+    @extend_schema(request={})
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data={})
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError:
+            response = Response(
+                {"detail": "Refresh token is invalid or blacklisted."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            response.delete_cookie("refresh")
+            return response
+
+        access_token = serializer.validated_data.get("access")
+        refresh_token = serializer.validated_data.get("refresh")
+        response = Response({"access": access_token})
+
+        # If refresh token rotation is enabled, set a new refresh in the cookie
+        if settings.SIMPLE_JWT.get("ROTATE_REFRESH_TOKENS", False) and refresh_token:
+            response.set_cookie(
+                key="refresh",
+                value=refresh_token,
+                httponly=True,
+                secure=settings.DEBUG is False,
+                samesite="lax",
+                max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()
+            )
+
+        return response
 
 class LoginView(GenericAPIView):
     serializer_class = LoginRequestSerializer
@@ -53,7 +92,14 @@ class LoginView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        user = User.objects.get(email=email)
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+                return Response(
+                    LoginErrorResponseSerializer({"error": "Invalid credentials"}).data,
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
 
         if not user or not check_password(password, user.password):
             return Response(
@@ -73,26 +119,44 @@ class LoginView(GenericAPIView):
             )
 
         tokens = get_tokens_for_user(user)
-        return Response(
-            LoginResponseSerializer({"message": "Login successful", "tokens": tokens}).data,
+        response = Response(
+            LoginResponseSerializer({"message": "Login successful", "access": tokens["access"]}).data,
             status=status.HTTP_200_OK
         )
 
-class LogoutView(GenericAPIView):
-    serializer_class = LogoutSerializer
+        response.set_cookie(
+            key='refresh',
+            value=tokens["refresh"],
+            httponly=True,
+            secure=settings.DEBUG is False,
+            samesite='lax',
+            max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()
+        )
 
+        return response
+
+class LogoutView(APIView):
+
+    @extend_schema(
+        request=None,
+        responses={
+            status.HTTP_205_RESET_CONTENT: {},
+            status.HTTP_400_BAD_REQUEST: {}
+        }
+    )
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        # TODO: read refresh token from client cookie http only
-        refresh_token = serializer.validated_data["refresh"]
+        refresh_token = request.COOKIES.get("refresh")
+
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            print(e)
+            print("Logout error:", e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        response = Response(status=status.HTTP_205_RESET_CONTENT)
+        response.delete_cookie("refresh")
+        return response
 
 class SignupView(GenericAPIView):
     permission_classes = [AllowAny]

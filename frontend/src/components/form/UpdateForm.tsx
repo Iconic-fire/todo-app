@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PatchedTodo, Todo } from "../../api/client";
+import { PatchedTodo, Todo } from "../../client";
 
 interface UpdateTodoPayload {
   title: string;
@@ -15,7 +15,7 @@ interface UpdateTodoFormProps {
   onSubmit: (formData: PatchedTodo) => void;
 }
 
-function UpdateTodoForm({
+export function UpdateTodoForm({
   todo,
   isVisible,
   onClose,
@@ -194,4 +194,3 @@ function UpdateTodoForm({
   );
 }
 
-export default UpdateTodoForm;

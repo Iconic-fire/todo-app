@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import { accountsApi } from "../api/main";
+import { unauthenticatedAccountsApi } from "../api";
 
-function ResetPasswordConfirm() {
+export function ResetPasswordConfirm() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ function ResetPasswordConfirm() {
             }
 
             try {
-                await accountsApi.accountsResetPasswordValidateRetrieve(token, uid);
+                await unauthenticatedAccountsApi.accountsResetPasswordValidateRetrieve(token, uid);
                 setTokenValid(true);
             } catch (err: any) {
                 setError(err.response?.data?.error || "Invalid or expired reset link.");
@@ -52,7 +52,7 @@ function ResetPasswordConfirm() {
 
         try {
             setSubmitting(true);
-            const response = await accountsApi.accountsPasswordResetConfirmCreate(
+            const response = await unauthenticatedAccountsApi.accountsPasswordResetConfirmCreate(
                 token!,
                 uid!,
                 { password: newPassword, password2: confirmPassword }
@@ -164,5 +164,3 @@ function ResetPasswordConfirm() {
         </div>
     );
 }
-
-export default ResetPasswordConfirm;

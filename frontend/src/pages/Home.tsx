@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { todoApi } from "../api/main";
-import { PatchedTodo, Todo as TodoObj } from "../api/client";
-import CreateTodoForm, {
-  CreateTodoPayload,
-} from "../components/form/CreateForm";
-import TodoList from "../components/TodoList";
-import NoRecordFound from "../components/Empty";
+import { todoApi } from "../api";
+import { PatchedTodo, Todo as TodoObj } from "../client";
+import { CreateTodoForm, CreateTodoPayload } from "../components";
+import { TodoList } from "../components";
+import { NoRecordFound } from "../components";
 
-function Home() {
+export function Home() {
   const [todos, setTodos] = useState<TodoObj[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [failed, setFailed] = useState<boolean>(false);
@@ -99,5 +97,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;

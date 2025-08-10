@@ -1,4 +1,4 @@
-function DateInfo({
+export function DateInfo({
   prefixText,
   date,
 }: {
@@ -11,5 +11,3 @@ function DateInfo({
     </span>
   );
 }
-
-export default DateInfo;

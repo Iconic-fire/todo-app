@@ -1,13 +1,22 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer, exceptions
 from django.contrib.auth.password_validation import validate_password
 
 
 User = get_user_model()
 
-class TokensSerializer(serializers.Serializer):
-    access = serializers.CharField()
-    refresh = serializers.CharField()
+class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+    refresh = serializers.CharField(required=False, allow_blank=True)
+    
+    def validate(self, attrs):
+        refresh_token = self.context['request'].COOKIES.get('refresh')
+
+        if not refresh_token:
+            raise exceptions.NotAuthenticated("Refresh token cookie not set")
+        
+        attrs['refresh'] = refresh_token
+        return super().validate(attrs)
 
 class LoginRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -15,13 +24,10 @@ class LoginRequestSerializer(serializers.Serializer):
 
 class LoginResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
-    tokens = TokensSerializer()
+    access = serializers.CharField()
 
 class LoginErrorResponseSerializer(serializers.Serializer):
     error = serializers.CharField()
-
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
 
 class SignupRequestSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
