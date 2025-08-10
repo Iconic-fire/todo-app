@@ -7,7 +7,7 @@ import { AuthProvider } from './auth'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename="/todo-app">
+    <BrowserRouter>
       <AuthProvider>
         <App />
       </AuthProvider>
