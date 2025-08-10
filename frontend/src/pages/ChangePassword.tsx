@@ -1,7 +1,7 @@
-import { useState} from "react";
-import { accountsApiAuthenticated } from "../api/main";
+import { useState } from "react";
+import { unauthenticatedAccountsApi } from "../api";
 
-function PasswordChange() {
+export function ChangePassword() {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -17,7 +17,7 @@ function PasswordChange() {
     setLoading(true);
 
     try {
-        const response = await accountsApiAuthenticated.accountsChangePasswordCreate({
+      const response = await unauthenticatedAccountsApi.accountsChangePasswordCreate({
         old_password: oldPassword,
         new_password: password,
         new_password2: confirmPassword,
@@ -58,7 +58,7 @@ function PasswordChange() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">
@@ -131,5 +131,3 @@ function PasswordChange() {
     </div>
   );
 }
-
-export default PasswordChange;

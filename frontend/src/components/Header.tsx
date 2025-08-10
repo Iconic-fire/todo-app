@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router";
-import { getRefreshToken, removeTokens } from "../auth/utils";
-import { accountsApiAuthenticated } from "../api/main";
+import { useAuth } from "../auth";
 
-function Header() {
+export function Header() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+  const { logout } = useAuth();
 
   async function handleLogout() {
     setIsLoggingOut(true);
     try {
-      const refresh = getRefreshToken();
-      if (refresh) {
-        await accountsApiAuthenticated.accountsLogoutCreate({ refresh });
-      }
-    } catch (error) {
+      await logout();
+    } catch (error: any) {
       console.error("Logout failed:", error);
     } finally {
-      removeTokens();
       navigate("/login");
       setIsLoggingOut(false);
     }
@@ -44,5 +40,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;

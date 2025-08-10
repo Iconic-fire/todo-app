@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { getRefreshToken, isTokenExpired } from "../auth/utils";
-import { accountsApi } from "../api/main";
+import { unauthenticatedAccountsApi } from "../api";
+import { useAuth } from "../auth";
 
-function Signup() {
+export function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -11,14 +11,15 @@ function Signup() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // if already logged in navigate to index page
   useEffect(() => {
-    const token = getRefreshToken();
-    if (token && !isTokenExpired(token)) {
-      navigate("/", { replace: true });
+    if (isAuthenticated) {
+      navigate("/");
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
@@ -33,7 +34,7 @@ function Signup() {
 
 
     try {
-      await accountsApi.accountsSignupCreate({
+      await unauthenticatedAccountsApi.accountsSignupCreate({
         email,
         password,
         password2: confirmPassword,
@@ -74,7 +75,7 @@ function Signup() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center h-svh bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded shadow-md">
@@ -154,5 +155,3 @@ function Signup() {
     </div>
   );
 }
-
-export default Signup;

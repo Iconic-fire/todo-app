@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router";
-import { getRefreshToken, isTokenExpired } from "./utils";
-import Header from "../components/Header";
+import { useAuth } from "./AuthProvider";
+import { Header } from "../components";
 
-function ProtectedRoute( ) {
-  const token = getRefreshToken();
+// ProtectedRoute will redirect to login if not authenticated.
+export function ProtectedRoute() {
+  const { isAuthenticated } = useAuth();
 
-  if (!token || isTokenExpired(token)) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
@@ -14,5 +15,3 @@ function ProtectedRoute( ) {
     <Outlet />
   </>;
 };
-
-export default ProtectedRoute;

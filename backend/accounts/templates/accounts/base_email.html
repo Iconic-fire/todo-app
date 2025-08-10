@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App - {% block title %}{% endblock title %}</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-color: #121212;
+            color: #e0e0e0;
+            word-wrap: break-word;
+            width: 100%;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #e0e0e0;
+            font-size: 26px;
+            margin: 0;
+        }
+
+        .content {
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #3fbb77;
+            color: #ffffff;
+            padding: 15px 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 250px;
+            box-sizing: border-box;
+        }
+
+        .cta-button:hover {
+            background-color: #38a66d;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #888888;
+            margin-top: 30px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            .content {
+                font-size: 14px;
+            }
+            .cta-button {
+                padding: 12px 20px;
+                font-size: 16px;
+                max-width: 180px;
+            }
+            .footer {
+                font-size: 12px;
+                padding: 0 10px;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .cta-button {
+                max-width: 220px;
+                padding: 14px 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>{% block heading %}Welcome{% endblock heading %}</h1>
+        </div>
+
+        {% block content %}
+        <div class="content">
+            <p>{% block message %}{% endblock message %}</p>
+
+            {% if button_url %}
+                <a href="{{ button_url }}" class="cta-button">{% block button_text %}Click Here{% endblock button_text %}</a>
+            {% endif %}
+
+            {% block secondary_text %}
+                <p>If you received this email by mistake, you can ignore it.</p>
+            {% endblock secondary_text %}
+        </div>
+        {% endblock content %}
+
+        <div class="footer">
+            <p>&copy; {% now "Y" %} Todo App. All rights reserved.</p>
+            <p>If you are having trouble, contact our support at 
+                <a href="mailto:support@example.com" style="color: #3fbb77;">support@todo.com</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

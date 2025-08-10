@@ -1,34 +1,33 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
-import { accountsApi } from '../api/main';
+import { unauthenticatedAccountsApi } from '../api';
 
-
-function VerifyEmail() {
+export function VerifyEmail() {
     const [searchParams] = useSearchParams();
-     const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [statusMessage, setStatusMessage] = useState<string>('');
+    const [success, setSuccess] = useState<boolean | null>(null);
+    const navigate = useNavigate();
+
     const uid = searchParams.get('uid');
     const token = searchParams.get('token');
-    
-    // Define state with the type for statusMessage as a string
-    const [statusMessage, setStatusMessage] = useState<string>('');
-    const navigate = useNavigate();
 
     async function verifyEmail(token: string, uid: string) {
         setLoading(true);
         try {
-           const response = await accountsApi.accountsVerifyEmailRetrieve(token, uid);
+            const response = await unauthenticatedAccountsApi.accountsVerifyEmailRetrieve(token, uid);
             setStatusMessage(response.data.message);
+            setSuccess(true);
             // Redirect after a few seconds
-            setTimeout(() => navigate('/login', {replace: true}), 2000);
+            setTimeout(() => navigate('/login', { replace: true }), 2000);
         } catch (err: any) {
             // Network error or no response
             if (!err.response) {
                 setStatusMessage("Failed to verify account. Please try again later.");
-                setLoading(false);
-                return;
+            } else {
+                setStatusMessage('Invalid or expired token.');
             }
-
-            setStatusMessage('Invalid or expired token.');
+            setSuccess(false);
         } finally {
             setLoading(false);
         }
@@ -39,6 +38,7 @@ function VerifyEmail() {
             verifyEmail(token, uid);
         } else {
             setStatusMessage('Invalid activation link.');
+            setSuccess(false);
         }
     }, [uid, token, navigate]);
 
@@ -51,13 +51,12 @@ function VerifyEmail() {
                 </div>
             )}
 
-            {!loading && statusMessage && (
+            {!loading && statusMessage && success !== null && (
                 <div
-                    className={`mt-6 p-4 w-96 text-center rounded-lg shadow-lg ${
-                        statusMessage === 'Email confirmed successfully!'
-                            ? 'bg-green-100 text-green-800 border-green-400 dark:bg-green-700 dark:text-green-100 dark:border-green-500'
-                            : 'bg-red-100 text-red-800 border-red-400 dark:bg-red-700 dark:text-red-100 dark:border-red-500'
-                    }`}
+                    className={`mt-6 p-4 w-96 text-center rounded-lg shadow-lg border ${success
+                        ? 'bg-green-100 text-green-800 border-green-400 dark:bg-green-700 dark:text-green-100 dark:border-green-500'
+                        : 'bg-red-100 text-red-800 border-red-400 dark:bg-red-700 dark:text-red-100 dark:border-red-500'
+                        }`}
                 >
                     {statusMessage}
                 </div>
@@ -65,5 +64,3 @@ function VerifyEmail() {
         </div>
     );
 }
-
-export default VerifyEmail;

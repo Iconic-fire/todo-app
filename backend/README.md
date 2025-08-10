@@ -24,6 +24,11 @@
     export ENV="dev"
     export SECRET_KEY="secure-secret-key"
     export CORS_ALLOWED_ORIGINS="http://localhost:3000,http://example.com"
+    export EMAIL_HOST="smtp.example.com"
+    export EMAIL_PORT="587"
+    export EMAIL_USE_TLS="True"
+    export EMAIL_HOST_USER="your_username"
+    export EMAIL_HOST_PASSWORD="your_password"
 
     python3 manage.py runserver $@
     ```
@@ -52,4 +57,10 @@
 
     ```sh
     python3 manage.py spectacular --validate --color --file schema.yml
+    ```
+
+# Clearing Expired Tokens
+
+    ```sh
+    python3 manage.py flushexpiredtokens
     ```

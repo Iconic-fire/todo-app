@@ -1,48 +1,48 @@
 import { useState } from "react";
 
 export interface CreateTodoPayload {
-    title: string;
-    description?: string;
-    scheduleOn?: string; 
+  title: string;
+  description?: string;
+  scheduleOn?: string;
 }
 
 interface CreateTodoFormProps {
-    isVisible: boolean;
-    onClose: () => void;
-    onSubmit: (formData: CreateTodoPayload) => void;
-  }
+  isVisible: boolean;
+  onClose: () => void;
+  onSubmit: (formData: CreateTodoPayload) => void;
+}
 
-function CreateTodoForm({isVisible, onClose, onSubmit }: CreateTodoFormProps) {
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        scheduleOn: "",
+export function CreateTodoForm({ isVisible, onClose, onSubmit }: CreateTodoFormProps) {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    scheduleOn: "",
+  });
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log("Form Submitted:", formData);
+    onSubmit(formData)
+
+    // Reset form fields
+    setFormData({
+      title: "",
+      description: "",
+      scheduleOn: "",
     });
 
-    function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
+    onClose();
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+  if (!isVisible) return null;
 
-        console.log("Form Submitted:", formData);
-        onSubmit(formData)
-
-        // Reset form fields
-        setFormData({
-            title: "",
-            description: "",
-            scheduleOn: "",
-        });
-  
-        onClose();
-    };
-
-    if (!isVisible) return null;
-
-    return <div
+  return <div
     id="crud-modal"
     tabIndex={-1}
     aria-hidden={!isVisible}
@@ -151,4 +151,3 @@ function CreateTodoForm({isVisible, onClose, onSubmit }: CreateTodoFormProps) {
   </div>;
 }
 
-export default CreateTodoForm;
