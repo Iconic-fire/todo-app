@@ -62,7 +62,12 @@ export function Home() {
   }, []);
 
   if (loading === true) {
-    return <h1>Loading ...</h1>;
+    return (
+      <div className="h-svh flex items-center justify-center bg-stone-800">
+        <div className="text-white text-lg">Loading your todos...</div>
+        <div className="spinner-border animate-spin ml-2"></div>
+      </div>
+    );
   }
 
   if (failed === true) {
