@@ -62,12 +62,33 @@ export function Home() {
   }, []);
 
   if (loading === true) {
-    return <h1>Loading ...</h1>;
+    return (
+      <div className="h-svh flex items-center justify-center bg-stone-800">
+        <div className="text-white text-lg">Loading your todos...</div>
+        <div className="spinner-border animate-spin ml-2"></div>
+      </div>
+    );
   }
 
   if (failed === true) {
-    // TODO: add retry button
-    return <h1>Unable to fetch</h1>;
+    return <div className="h-svh flex flex-col items-center justify-center bg-stone-800">
+      <h1 className="text-white text-lg mb-4">Unable to fetch your todos.</h1>
+      <button
+        onClick={() => {
+          setLoading(true);
+          setFailed(false);
+          // Retry fetching data
+          todoApi
+            .todosList()
+            .then((res) => setTodos(res.data.results))
+            .catch(() => setFailed(true))
+            .finally(() => setLoading(false));
+        }}
+        className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+      >
+        Retry
+      </button>
+    </div>;
   }
 
   return (
