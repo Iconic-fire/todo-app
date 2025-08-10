@@ -182,6 +182,9 @@ CORS_ALLOWED_ORIGINS_BY_ENV = os.getenv('CORS_ALLOWED_ORIGINS', '')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_BY_ENV.split(',') if origin.strip()]
 FRONTEND_URL = CORS_ALLOWED_ORIGINS[0]
 
+# CSRF
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
