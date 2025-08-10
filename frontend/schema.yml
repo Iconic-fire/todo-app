@@ -31,6 +31,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChangePasswordResponse'
           description: ''
+  /api/accounts/csrf/:
+    get:
+      operationId: accounts_csrf_retrieve
+      tags:
+      - accounts
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CSRFToken'
+          description: ''
   /api/accounts/login/:
     post:
       operationId: accounts_login_create
@@ -421,6 +436,14 @@ paths:
           description: No response body
 components:
   schemas:
+    CSRFToken:
+      type: object
+      properties:
+        token:
+          type: string
+          format: email
+      required:
+      - token
     ChangePasswordRequest:
       type: object
       properties:
