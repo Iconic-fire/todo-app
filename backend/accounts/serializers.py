@@ -6,6 +6,9 @@ from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
+class CSRFTokenSerializer(serializers.Serializer):
+    token = serializers.EmailField()
+
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     refresh = serializers.CharField(required=False, allow_blank=True)
     

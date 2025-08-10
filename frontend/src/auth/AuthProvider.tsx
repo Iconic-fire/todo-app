@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { setNavigate } from "./redirects";
-import { setAccessToken } from "./tokenStore";
+import { getCSRFToken, setAccessToken, setCSRFToken } from "./tokenStore";
 import { scheduleRefreshFromAccessToken, clearScheduledRefresh } from "./tokenScheduler";
 import { accountsApi, unauthenticatedAccountsApi } from "../api";
 import { useLocation, useNavigate } from "react-router";
@@ -31,11 +31,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setNavigate(navigate);
     }, [navigate]);
 
+    const ensureCsrfToken = async () => {
+        const res = await unauthenticatedAccountsApi.accountsCsrfRetrieve();
+        setCSRFToken(res.data.token);
+    }
+
     // call on app mount to attempt silent refresh (cookie-based)
     const initAuth = async () => {
         try {
+            await ensureCsrfToken();
             // attempt server-side refresh using cookie; response should contain access token
-            const res = await unauthenticatedAccountsApi.accountsRefreshCreate();
+            const res = await unauthenticatedAccountsApi.accountsRefreshCreate({
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
             setAccessToken(res.data.access);
             setIsAuthenticated(true);
             // schedule proactive refresh

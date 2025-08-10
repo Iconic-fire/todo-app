@@ -3,6 +3,9 @@ from django.contrib.auth.hashers import check_password
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework.generics import GenericAPIView
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -13,6 +16,7 @@ from rest_framework.permissions import AllowAny
 from accounts.mails import send_activation_email, send_password_reset_email
 from rest_framework_simplejwt.views import TokenRefreshView
 from accounts.serializers import (
+    CSRFTokenSerializer,
     ChangePasswordRequestSerializer,
     ChangePasswordResponseSerializer,
     CookieTokenRefreshSerializer,
@@ -42,6 +46,22 @@ def get_tokens_for_user(user):
         "access": str(refresh.access_token),
     }
 
+class CSRFTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: CSRFTokenSerializer,
+        },
+    )
+    def get(self, request):
+        token = get_token(request)
+        return Response(
+            CSRFTokenSerializer({"token": token}).data, 
+            status=status.HTTP_200_OK,
+        )
+
+@method_decorator(csrf_protect, name="dispatch")
 class CookieTokenRefreshView(TokenRefreshView):
     serializer_class = CookieTokenRefreshSerializer
 
