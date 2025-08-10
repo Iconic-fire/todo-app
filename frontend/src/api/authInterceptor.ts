@@ -1,5 +1,5 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { setAccessToken, redirectToLogin } from "../auth";
+import { setAccessToken, redirectToLogin, getCSRFToken } from "../auth";
 import { AccountsApi, Configuration } from "../client";
 import { TOKEN_PREFIX, axiosInstance, setAuthorizationHeader } from "./axiosConfig";
 
@@ -51,7 +51,9 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const response = await unauthenticatedAccountsApi.accountsRefreshCreate();
+                const response = await unauthenticatedAccountsApi.accountsRefreshCreate({
+                    headers: { 'X-CSRFToken': getCSRFToken() }
+                });
                 const newAccessToken = response.data.access;
                 setAccessToken(newAccessToken);
                 processQueue(null, newAccessToken);
