@@ -15,7 +15,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from accounts.mails import send_activation_email, send_password_reset_email
 from rest_framework_simplejwt.views import TokenRefreshView
-from accounts.serializers import (
+from .serializers import (
     CSRFTokenSerializer,
     ChangePasswordRequestSerializer,
     ChangePasswordResponseSerializer,
