@@ -134,7 +134,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# AUTH
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_REDIRECT_URL = "core:todo_list"
 
 # REST FRAMEWORK
 DEFAULT_RENDERER_CLASSES=['rest_framework.renderers.JSONRenderer']
