@@ -42,7 +42,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await ensureCsrfToken();
             // attempt server-side refresh using cookie; response should contain access token
             const res = await unauthenticatedAccountsApi.accountsRefreshCreate({
-                headers: { 'X-CSRFToken': getCSRFToken() }
+                headers: { 'X-CSRFToken': getCSRFToken() },
+                withCredentials: true,
             });
             setAccessToken(res.data.access);
             setIsAuthenticated(true);

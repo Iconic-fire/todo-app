@@ -10,7 +10,8 @@ const SAFE_MARGIN_SECONDS = 60; // refresh 60s before expiry
 export async function refreshAccessToken(): Promise<boolean> {
     try {
         const res = await unauthenticatedAccountsApi.accountsRefreshCreate({
-            headers: { 'X-CSRFToken': getCSRFToken() }
+            headers: { 'X-CSRFToken': getCSRFToken() },
+            withCredentials: true,
         });
         setAccessToken(res.data.access);
         // schedule next refresh using new token

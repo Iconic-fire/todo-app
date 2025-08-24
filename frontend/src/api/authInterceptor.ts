@@ -52,7 +52,8 @@ axiosInstance.interceptors.response.use(
 
             try {
                 const response = await unauthenticatedAccountsApi.accountsRefreshCreate({
-                    headers: { 'X-CSRFToken': getCSRFToken() }
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    withCredentials: true,
                 });
                 const newAccessToken = response.data.access;
                 setAccessToken(newAccessToken);
