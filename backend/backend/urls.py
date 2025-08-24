@@ -25,10 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include(todo_router.urls)),
     # TODO: Fix BrowsableAPIRenderer not including this endpoint /api/ (broken)
-    path("api/accounts/", include("accounts.urls")),
+    path("api/accounts/", include("accounts.api.urls")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path("accounts/", include("accounts.urls")),
     path("todos/", include("core.urls")),
     path("", views.HomeTemplateView.as_view(), name='home'),
 ]
