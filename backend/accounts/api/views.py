@@ -90,7 +90,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                 value=refresh_token,
                 httponly=True,
                 secure=settings.DEBUG is False,
-                samesite="lax",
+                samesite="None",
                 max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()
             )
 
@@ -149,7 +149,7 @@ class LoginView(GenericAPIView):
             value=tokens["refresh"],
             httponly=True,
             secure=settings.DEBUG is False,
-            samesite='lax',
+            samesite='None',
             max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()
         )
 
