@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 from core.models import Todo
 from core.permissions import IsOwner
@@ -8,7 +9,7 @@ class TodoViewSet(ModelViewSet):
     """Todo View Set"""
 
     serializer_class = TodoSerializer
-    permission_classes=[IsOwner]
+    permission_classes=[IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         user = self.request.user
