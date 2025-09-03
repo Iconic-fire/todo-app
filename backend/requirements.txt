@@ -13,4 +13,7 @@ drf-spectacular-sidecar==2024.12.1
 django-cors-headers==4.6.0
 
 # authentication
-djangorestframework_simplejwt==5.5.1
+djangorestframework_simplejwt==5.5.1django-debug-toolbar==6.0.0
+
+# debugging
+django-debug-toolbar==6.0.0

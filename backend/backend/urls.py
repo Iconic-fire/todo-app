@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.conf import settings
 
 from core import views
 from core.routers import todo_router
@@ -33,3 +34,7 @@ urlpatterns = [
     path("todos/", include("core.urls")),
     path("", views.HomeTemplateView.as_view(), name='home'),
 ]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns += debug_toolbar_urls()
