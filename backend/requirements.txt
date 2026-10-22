@@ -14,7 +14,6 @@ django-cors-headers==4.6.0
 
 # authentication
 djangorestframework_simplejwt==5.5.1
-django-debug-toolbar==6.0.0
 
 # debugging
 django-debug-toolbar==6.0.0
